@@ -10,7 +10,7 @@ interface UsuarioAttributes {
   telefono?: number;
   password: string;
   rol: "MEDICO" | "PACIENTE";
-  esado?: string;
+  estado?: string;
   fecha_registro: Date;
   fecha_actualizacion: Date;
 }
@@ -27,7 +27,7 @@ export class Usuario extends Model<UsuarioAttributes, UsuarioCreationAttributes>
   public telefono?: number;
   public password!: string;
   public rol!: "MEDICO" | "PACIENTE";
-  public esado?: string;
+  public estado?: string;
   public fecha_registro!: Date;
   public fecha_actualizacion!: Date;
 }
@@ -67,7 +67,7 @@ Usuario.init(
       type: DataTypes.ENUM("MEDICO", "PACIENTE"),
       defaultValue: "PACIENTE",
     },
-    esado: {
+    estado: {
       type: DataTypes.STRING,
     },
     fecha_registro: {

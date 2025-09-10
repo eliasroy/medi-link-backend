@@ -9,7 +9,9 @@ export const login = async (email: string, password: string) => {
 
   const valido = await bcrypt.compare(password, usuario.password);
   if (!valido) throw new Error("Contraseña incorrecta");
-
+  if (!process.env.JWT_SECRET) {
+    throw new Error(" JWT_SECRET no está definido en .env");
+  }
   const token = jwt.sign(
     { id: usuario.id_usuario, rol: usuario.rol },
     process.env.JWT_SECRET as string,
