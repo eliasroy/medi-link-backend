@@ -1,9 +1,9 @@
 import { Router } from "express";
 import { MedicoController } from "../controller/medico.controller";
-import { verifyToken } from "../middlewares/auth";
+import { verifyToken ,authorizeRoles } from "../middlewares/auth";
 
 const router = Router();
 
-router.get("/medicos", verifyToken,MedicoController.getMedicosOrdenados);
+router.get("/medicos", verifyToken, authorizeRoles("PACIENTE"),MedicoController.getMedicosOrdenados);
 
 export default router;

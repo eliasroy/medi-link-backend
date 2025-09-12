@@ -1,5 +1,6 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { Request, Response, NextFunction } from "express";
 import { Usuario } from "../model/usuario.model";
 import { usuarioToDTO } from "../utils/mapper";
 
