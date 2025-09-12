@@ -19,6 +19,8 @@ interface RegistroMedico {
   nombre: string;
   paterno: string;
   materno: string;
+  id_especialidad:number;
+  calificacion: number;
   email: string;
   telefono?: number;
   password: string;
@@ -64,8 +66,11 @@ export const registrarMedico = async (data: RegistroMedico) => {
 
   const medico = await Medico.create({
     id_usuario: usuario.id_usuario,
+    id_especialidad: data.id_especialidad,
+    calificacion_promedio:data.calificacion,
     nro_colegiatura: data.nro_colegiatura,
     anios_experiencia: data.anios_experiencia,
+  
   });
 
   return { usuario, medico };

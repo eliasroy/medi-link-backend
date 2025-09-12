@@ -4,6 +4,7 @@ import { sequelize } from "../config/database";
 interface MedicoAttributes {
   id_medico: number;
   id_usuario: number;
+  id_especialidad: number;
   nro_colegiatura: string;
   anios_experiencia?: number;
   calificacion_promedio?: number;
@@ -17,6 +18,7 @@ export class Medico extends Model<MedicoAttributes, MedicoCreationAttributes>
   implements MedicoAttributes {
   public id_medico!: number;
   public id_usuario!: number;
+  public id_especialidad!: number;
   public nro_colegiatura!: string;
   public anios_experiencia?: number;
   public calificacion_promedio?: number;
@@ -35,6 +37,11 @@ Medico.init(
       type: DataTypes.BIGINT,
       allowNull: false,
       unique: true,
+    },
+    id_especialidad: {
+      type: DataTypes.BIGINT,
+      allowNull: false,
+      unique: false,
     },
     nro_colegiatura: {
       type: DataTypes.STRING,

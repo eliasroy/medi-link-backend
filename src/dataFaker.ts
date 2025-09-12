@@ -28,6 +28,12 @@ async function seed() {
         nombre: faker.person.firstName(),
         paterno: faker.person.lastName(),
         materno: faker.person.lastName(),
+        id_especialidad:  faker.number.int({ min: 1, max: 40 }),
+        calificacion: faker.number.float({
+          min: 0.1,
+          max: 9.99,
+          fractionDigits: 2, // 2 decimales
+        }),
         email: `medico${i}@test.com`,
         telefono: parseInt(faker.phone.number().replace(/\D/g, '').slice(0, 9)),
         password: "123",
