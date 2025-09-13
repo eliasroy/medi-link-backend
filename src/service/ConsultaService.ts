@@ -99,6 +99,46 @@ class ConsultaService {
     });
   }
 
+static async calificarConsulta(
+  idConsulta: number,
+  idPaciente: number,
+  calificacion: number
+) {
+  if (calificacion < 1 || calificacion > 10) {
+    throw new Error("La calificación debe ser un número entre 1 y 10");
+  }
+
+  return await sequelize.transaction(async (t: Transaction) => {
+    const consulta = await Consulta.findByPk(idConsulta, { transaction: t });
+    if (!consulta) throw new Error("Consulta no encontrada");
+
+    // Solo consultas FINALIZADAS pueden ser calificadas
+    if (consulta.estado !== "FINALIZADA") {
+      throw new Error("Solo se pueden calificar consultas finalizadas");
+    }
+
+    // Verificar que la cita pertenece al paciente
+    const cita = await Cita.findByPk(consulta.id_cita, { transaction: t });
+    if (!cita) throw new Error("Cita no encontrada");
+
+    if (cita.id_paciente !== idPaciente) {
+      throw new Error("No puedes calificar una consulta que no te pertenece");
+    }
+
+    // Evitar recalificación
+    if (consulta.calificacion) {
+      throw new Error("La consulta ya fue calificada");
+    }
+
+    // Actualizar calificación
+    await consulta.update(
+      { calificacion, fecha_actualizacion: new Date() },
+      { transaction: t }
+    );
+
+    return consulta;
+  });
+}
 
   
 }

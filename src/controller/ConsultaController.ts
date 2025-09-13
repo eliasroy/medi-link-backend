@@ -35,6 +35,24 @@ class ConsultaController {
       res.status(400).json({ success: false, message: err.message });
     }
   }
+
+  static async calificarConsulta(req: Request, res: Response) {
+    try {
+      const idPaciente = (req as any).user.id; // paciente del token
+      const { id_consulta, calificacion } = req.body;
+  
+      const consulta = await ConsultaService.calificarConsulta(
+        Number(id_consulta),
+        idPaciente,
+        Number(calificacion)
+      );
+  
+      res.status(200).json({ success: true, data: consulta });
+    } catch (err: any) {
+      res.status(400).json({ success: false, message: err.message });
+    }
+  }
+  
 }
 
 export default ConsultaController;
