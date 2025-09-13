@@ -10,6 +10,7 @@ VistaMedicos.init(
     paterno: DataTypes.STRING,
     materno: DataTypes.STRING,
     nro_colegiatura: DataTypes.STRING,
+    id_especialidad: DataTypes.BIGINT,
     especialidad: DataTypes.STRING,
     especialidad_descripcion: DataTypes.TEXT,
     anios_experiencia: DataTypes.INTEGER,

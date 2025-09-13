@@ -1,15 +1,13 @@
 import { Request, Response } from "express";
-import { MedicoService } from "../service/medico.service";
+import { listarMedicosFiltrados  } from "../service/medico.service";
 
-export class MedicoController {
-  static async getMedicosOrdenados(req: Request, res: Response) {
+export const getMedicos = async (req: Request, res: Response) => {
     try {
-        console.log('entro');
-      const medicos = await MedicoService.listarMedicosOrdenados();
-
+      const filtros = req.query; // parámetros opcionales en query string
+      const medicos = await listarMedicosFiltrados(filtros);
       res.json(medicos);
     } catch (error) {
       res.status(500).json({ message: "Error al obtener médicos", error });
     }
-  }
-}
+  };
+  
