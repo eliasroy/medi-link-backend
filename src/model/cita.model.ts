@@ -1,4 +1,4 @@
-// models/Cita.ts
+
 import { DataTypes, Model } from "sequelize";
 import {sequelize} from "../config/database";
 import Horario from "./horario.model";

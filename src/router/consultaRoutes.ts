@@ -1,0 +1,11 @@
+import { Router } from "express";
+import ConsultaController from "../controller/ConsultaController";
+import { verifyToken, authorizeRoles } from "../middlewares/auth";
+
+const router = Router();
+
+// Solo médicos pueden iniciar o actualizar consultas
+router.post("/iniciar", verifyToken, authorizeRoles("MEDICO"), ConsultaController.iniciarConsulta);
+router.put("/actualizar/:id_consulta", verifyToken, authorizeRoles("MEDICO"), ConsultaController.actualizarConsulta);
+
+export default router;
