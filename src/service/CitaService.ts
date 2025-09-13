@@ -23,7 +23,7 @@ class CitaService {
       // Caso 1: paciente elige un horario existente
       if (data.idHorario) {
         const horarioEncontrado = await Horario.findOne({
-          where: { id_horario: data.idHorario, estado: "DISPONIBLE" },
+          where: { id_horario: data.idHorario, estado: "DISPONIBLE",modalidad:data.modalidad },
           transaction: t,
         });
 
