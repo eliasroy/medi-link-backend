@@ -26,6 +26,9 @@ export const listarMedicosFiltrados = async (filtros: any) => {
     if (filtros.anios_experiencia) {
       where.anios_experiencia = { [Op.gte]: filtros.anios_experiencia };
     }
+    if (filtros.calificacion_promedio) {
+      where.calificacion_promedio = { [Op.gte]: filtros.calificacion_promedio };
+    }
   
     const medicos = await VistaMedicos.findAll({
       where,

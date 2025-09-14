@@ -1,30 +1,35 @@
-import { DataTypes, Model, Optional } from "sequelize";
+// models/Especialidad.ts
+import { DataTypes, Model } from "sequelize";
 import { sequelize } from "../config/database";
 
-interface EspecialidadAttributes {
-  id_especialidad: number;
-  nombre: string;
-}
-
-interface EspecialidadCreationAttributes extends Optional<EspecialidadAttributes, "id_especialidad"> {}
-
-export class Especialidad extends Model<EspecialidadAttributes, EspecialidadCreationAttributes>
-  implements EspecialidadAttributes {
+class Especialidad extends Model {
   public id_especialidad!: number;
   public nombre!: string;
+  public descripcion!: string | null;
 }
 
 Especialidad.init(
   {
-    id_especialidad: {
-      type: DataTypes.BIGINT,
-      autoIncrement: true,
-      primaryKey: true,
+    id_especialidad: { 
+      type: DataTypes.BIGINT, 
+      autoIncrement: true, 
+      primaryKey: true 
     },
-    nombre: {
-      type: DataTypes.STRING,
-      allowNull: false,
+    nombre: { 
+      type: DataTypes.STRING(100), 
+      allowNull: false, 
+      unique: true 
+    },
+    descripcion: { 
+      type: DataTypes.TEXT, 
+      allowNull: true 
     },
   },
-  { sequelize, tableName: "especialidadades", timestamps: false }
+  { 
+    sequelize, 
+    modelName: "especialidades", 
+    timestamps: false 
+  }
 );
+
+export default Especialidad;

@@ -1,9 +1,30 @@
-import { Usuario } from "./usuario.model";
-import { Medico } from "./medico.model";
-import { Especialidad } from "./especialidad.model";
+// associations.ts
+import Horario from "./horario.model";
+import {Medico} from "./medico.model";
+import Especialidad from "./especialidad.model";
 
-Medico.belongsTo(Usuario, { foreignKey: "id_usuario" });
-Medico.belongsTo(Especialidad, { foreignKey: "id_especialidad" });
+// Asociación: Horario pertenece a un Médico
+Horario.belongsTo(Medico, {
+  foreignKey: 'id_medico',
+  as: 'medico'
+});
 
-Usuario.hasOne(Medico, { foreignKey: "id_usuario" });
-Especialidad.hasMany(Medico, { foreignKey: "id_especialidad" });
+// Asociación: Médico tiene muchos Horarios
+Medico.hasMany(Horario, {
+  foreignKey: 'id_medico',
+  as: 'horarios'
+});
+
+// Asociación: Médico pertenece a una Especialidad
+Medico.belongsTo(Especialidad, {
+  foreignKey: 'id_especialidad',
+  as: 'especialidad'
+});
+
+// Asociación: Especialidad tiene muchos Médicos
+Especialidad.hasMany(Medico, {
+  foreignKey: 'id_especialidad',
+  as: 'medicos'
+});
+
+export { Horario, Medico, Especialidad };
