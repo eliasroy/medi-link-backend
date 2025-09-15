@@ -20,7 +20,7 @@ class ConsultaController {
       const { id_consulta } = req.params;
       const idMedico = (req as any).user.id; // viene del token del médico
       const { diagnostico, pathArchivo, tratamiento, observaciones, calificacion, estado } = req.body;
-
+      console.log("enra")
       const consulta = await ConsultaService.actualizarConsulta(Number(id_consulta),idMedico, {
         diagnostico,
         pathArchivo,
@@ -53,6 +53,19 @@ class ConsultaController {
     }
   }
   
+  static async obtenerConsultaPorIdCita(req: Request, res: Response) {
+    try {
+      const { idCita } = req.params;
+      if (!idCita || isNaN(Number(idCita))) {
+        return res.status(400).json({ success: false, message: 'ID de cita inválido' });
+      }
+      const consulta = await ConsultaService.obtenerConsultaPorIdCita(Number(idCita));
+      return res.status(200).json({ success: true, data: consulta });
+    } catch (err: any) {
+      const status = err.message.includes('no encontrada') ? 404 : 400;
+      return res.status(status).json({ success: false, message: err.message });
+    }
+  }
 }
 
 export default ConsultaController;

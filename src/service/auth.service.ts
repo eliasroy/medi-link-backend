@@ -17,22 +17,25 @@ export const login = async (email: string, password: string) => {
   }
   const medico = await Medico.findOne({ where: { id_usuario:usuario.id_usuario } });
   const paciente = await Paciente.findOne({ where: { id_usuario:usuario.id_usuario } });
-  let idUser = null;
+  let idUser: number | null = null;
   if (medico) {
-    idUser = medico.id_medico;
+    idUser = Number(medico.id_medico);
   } else if (paciente) {
-    idUser = paciente.id_paciente;
+    idUser = Number(paciente.id_paciente);
   }
-
+  if (idUser === null) {
+    throw new Error("El usuario no tiene perfil de MÉDICO o PACIENTE");
+  }
+console.log(idUser);
   const token = jwt.sign(
     { id: idUser, rol: usuario.rol },
     process.env.JWT_SECRET as string,
-    { expiresIn: "1h" }
+    { expiresIn: "11h" }
   );
-
   return {
     mensaje: "Login exitoso",
     token,
-    usuario: usuarioToDTO(usuario),
+    idUser,
+    usuario: usuarioToDTO(usuario,idUser),
   };
 };

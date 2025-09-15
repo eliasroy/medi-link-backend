@@ -27,19 +27,20 @@ class ConsultaService {
       const existente = await Consulta.findOne({ where: { id_cita: idCita }, transaction: t });
       if (existente) throw new Error("La consulta para esta cita ya fue iniciada");
 
-      const consulta = await Consulta.create(
-        {
-          id_cita: idCita,
-          motivo,
-          estado: "INICIADO",
-          fecha_registro: new Date(),
-          fecha_actualizacion: new Date(),
-        },
-        { transaction: t }
-      );
-      return consulta;
-    });
-  }
+      await (cita as any).update({estado: "CONFIRMADA"},{ transaction: t })
+        const consulta = await Consulta.create(
+          {
+            id_cita: idCita,
+            motivo,
+            estado: "INICIADO",
+            fecha_registro: new Date(),
+            fecha_actualizacion: new Date(),
+          },
+          { transaction: t }
+        );
+        return consulta;
+      });
+    }
 
   // Actualizar consulta (según modalidad)
   static async actualizarConsulta(
@@ -85,7 +86,10 @@ class ConsultaService {
           throw new Error("Estado inválido para consulta presencial");
         }
       }
-
+      if(data.estado=="FINALIZADA"){
+        await horario.update({estado: data.estado},{transaction: t });
+        await cita.update({estado: "ATENDIDA"},{transaction: t });
+      }
       // Actualizar la consulta
       await consulta.update(
         {
@@ -94,7 +98,7 @@ class ConsultaService {
         },
         { transaction: t }
       );
-
+      
       return consulta;
     });
   }
@@ -140,6 +144,21 @@ static async calificarConsulta(
   });
 }
 
+  static async obtenerConsultaPorIdCita(idCita: number) {
+    const consulta = await Consulta.findOne({
+      where: { id_cita: idCita },
+      include: [
+        {
+          model: Cita,
+          attributes: ['id_cita','id_paciente','id_horario','modalidad','estado','fecha_registro','fecha_actualizacion']
+        }
+      ]
+    });
+    if (!consulta) {
+      throw new Error('Consulta no encontrada para la cita proporcionada');
+    }
+    return consulta;
+  }
   
 }
 

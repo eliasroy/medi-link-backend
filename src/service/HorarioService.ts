@@ -14,7 +14,6 @@ class HorarioService {
   static async crearHorario(
     idMedico: number,
     data: {
-      titulo: string;
       fecha: string;         // 'YYYY-MM-DD'
       hora_inicio: string;   // 'HH:mm:ss'
       hora_fin: string;      // 'HH:mm:ss'
@@ -44,7 +43,6 @@ class HorarioService {
       const horario = await Horario.create(
         {
           id_medico: idMedico,
-          titulo: data.titulo,
           fecha: data.fecha,
           hora_inicio: data.hora_inicio,
           hora_fin: data.hora_fin,

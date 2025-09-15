@@ -8,7 +8,7 @@ class HorarioController {
       const { titulo, fecha, hora_inicio, hora_fin, modalidad } = req.body;
 
       const horario = await HorarioService.crearHorario(idMedico, {
-        titulo,
+      
         fecha,
         hora_inicio,
         hora_fin,

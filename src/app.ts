@@ -22,7 +22,7 @@ app.use("/api/listarMedicos", medicoRoutes);
 app.use("/api/citas", citaRoutes);
 app.use("/api/horarios", horarioRoutes);
 app.use("/api/especialidades", especialidadRoutes);
-
+app.use("/api/consultas",consultaRoutes);
 (async () => {
   await conectarDB();
   await sequelize.sync();

@@ -9,7 +9,7 @@ class Horario extends Model {
   public fecha!: Date;
   public hora_inicio!: string;
   public hora_fin!: string;
-  public estado!: "DISPONIBLE" | "OCUPADO" | "CANCELADO";
+  public estado!: "DISPONIBLE" | "OCUPADO" | "CANCELADO"| "FINALIZADA";
   public modalidad!: "PRESENCIAL" | "VIRTUAL";
   public fecha_registro!: Date;
   public fecha_actualizacion!: Date;

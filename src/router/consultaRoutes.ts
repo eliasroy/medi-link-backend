@@ -8,4 +8,5 @@ const router = Router();
 router.post("/iniciar", verifyToken, authorizeRoles("MEDICO"), ConsultaController.iniciarConsulta);
 router.put("/actualizar/:id_consulta", verifyToken, authorizeRoles("MEDICO"), ConsultaController.actualizarConsulta);
 router.post("/calificar",verifyToken,authorizeRoles("PACIENTE"),ConsultaController.calificarConsulta);
+router.get("/cita/:idCita", verifyToken, authorizeRoles("MEDICO","PACIENTE"), ConsultaController.obtenerConsultaPorIdCita);
 export default router;
