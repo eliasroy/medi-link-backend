@@ -22,6 +22,32 @@ class CitaController {
           res.status(400).json({ success: false, message: err.message });
         }
       }
+
+    static async obtenerCitasPorPaciente(req: Request, res: Response) {
+        try {
+          const { idPaciente } = req.params;
+          
+          if (!idPaciente || isNaN(Number(idPaciente))) {
+            return res.status(400).json({ 
+              success: false, 
+              message: "ID de paciente inválido" 
+            });
+          }
+
+          const citas = await CitaService.obtenerCitasPorPaciente(Number(idPaciente));
+          
+          res.status(200).json({ 
+            success: true, 
+            data: citas,
+            count: citas.length 
+          });
+        } catch (err: any) {
+          res.status(500).json({ 
+            success: false, 
+            message: err.message 
+          });
+        }
+      }
 }
 
 export default CitaController;

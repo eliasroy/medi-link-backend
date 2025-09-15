@@ -349,6 +349,65 @@ Content-Type: application/json
 }
 ```
 
+### GET /citas/paciente/:idPaciente
+**Descripción:** Obtener todas las citas de un paciente específico
+
+**Headers:**
+```
+Authorization: Bearer <token>
+```
+
+**Path Parameters:**
+- `idPaciente`: ID del paciente (number)
+
+**Respuesta exitosa (200):**
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id_cita": "number",
+      "estado": "PENDIENTE" | "CONFIRMADA" | "CANCELADA" | "ATENDIDA",
+      "modalidad": "PRESENCIAL" | "VIRTUAL",
+      "fecha_registro": "YYYY-MM-DDTHH:MM:SS",
+      "fecha_actualizacion": "YYYY-MM-DDTHH:MM:SS",
+      "horario": {
+        "id_horario": "number",
+        "titulo": "string",
+        "fecha": "YYYY-MM-DD",
+        "hora_inicio": "HH:MM:SS",
+        "hora_fin": "HH:MM:SS",
+        "modalidad": "PRESENCIAL" | "VIRTUAL",
+        "estado": "DISPONIBLE" | "OCUPADO" | "CANCELADO",
+        "medico": {
+          "id_medico": "number",
+          "nro_colegiatura": "string",
+          "anios_experiencia": "number",
+          "calificacion_promedio": "number"
+        }
+      }
+    }
+  ],
+  "count": "number"
+}
+```
+
+**Respuesta de error (400):**
+```json
+{
+  "success": false,
+  "message": "ID de paciente inválido"
+}
+```
+
+**Respuesta de error (500):**
+```json
+{
+  "success": false,
+  "message": "Error al obtener las citas del paciente"
+}
+```
+
 ---
 
 ## 7. CONSULTAS

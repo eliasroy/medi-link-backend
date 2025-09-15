@@ -6,5 +6,6 @@ import { verifyToken, authorizeRoles } from "../middlewares/auth";
 const router = Router();
 
 router.post("/save", verifyToken, authorizeRoles("PACIENTE"), CitaController.crearCita);
+router.get("/paciente/:idPaciente", verifyToken, CitaController.obtenerCitasPorPaciente);
 
 export default router;

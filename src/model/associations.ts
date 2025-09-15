@@ -2,6 +2,7 @@
 import Horario from "./horario.model";
 import {Medico} from "./medico.model";
 import Especialidad from "./especialidad.model";
+import Cita from "./cita.model";
 
 // Asociación: Horario pertenece a un Médico
 Horario.belongsTo(Medico, {
@@ -27,4 +28,10 @@ Especialidad.hasMany(Medico, {
   as: 'medicos'
 });
 
-export { Horario, Medico, Especialidad };
+// Asociación: Horario tiene muchas Citas
+Horario.hasMany(Cita, {
+  foreignKey: 'id_horario',
+  as: 'citas'
+});
+
+export { Horario, Medico, Especialidad, Cita };

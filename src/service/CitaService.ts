@@ -1,8 +1,10 @@
 // services/CitaService.ts
 import Cita from "../model/cita.model";
 import Horario from "../model/horario.model";
+import { Medico } from "../model/medico.model";
 import { Transaction, Op } from "sequelize";
 import {sequelize} from "../config/database";
+import { title } from "process";
 
 class CitaService {
   static async crearCitaConHorario(
@@ -34,42 +36,42 @@ class CitaService {
         horario = horarioEncontrado;
 
         // actualizar estado a ocupado
-        await horario.update({ estado: "OCUPADO" }, { transaction: t });
+        await horario.update({ estado: "OCUPADO",titulo:data.titulo }, { transaction: t });
       } else {
             // Verificar si ya existe horario en la misma fecha/hora del mismo médico
-            const horarioExistente = await Horario.findOne({
-                where: {
-                id_medico: data.idMedico,
-                estado: { [Op.ne]: "CANCELADO" }, // ignorar cancelados
-                fecha: data.fecha,
-                [Op.and]: [
-                    { hora_inicio: { [Op.lt]: data.hora_fin } },   // inicio existente < fin nuevo
-                    { hora_fin: { [Op.gt]: data.hora_inicio } }   // fin existente > inicio nuevo
-                  ]
-                },
-                transaction: t,
-            });
+                const horarioExistente = await Horario.findOne({
+                    where: {
+                    id_medico: data.idMedico,
+                    estado: { [Op.ne]: "CANCELADO" }, // ignorar cancelados
+                    fecha: data.fecha,
+                    [Op.and]: [
+                        { hora_inicio: { [Op.lt]: data.hora_fin } },   // inicio existente < fin nuevo
+                        { hora_fin: { [Op.gt]: data.hora_inicio } }   // fin existente > inicio nuevo
+                      ]
+                    },
+                    transaction: t,
+                });
 
-            if (horarioExistente) {
-                throw new Error("Ya existe un horario en esa fecha y hora");
-            }
+                if (horarioExistente) {
+                    throw new Error("Ya existe un horario en esa fecha y hora");
+                }
 
-            // Crear horario
-            horario = await Horario.create(
-                {
-                id_medico: data.idMedico,
-                titulo: data.titulo,
-                fecha: data.fecha,
-                hora_inicio: data.hora_inicio,
-                hora_fin: data.hora_fin,
-                modalidad: data.modalidad,
-                estado: "OCUPADO",
-                fecha_registro: new Date(),
-                fecha_actualizacion: new Date(),
-                },
-                { transaction: t }
-            );
-            }
+                // Crear horario
+                horario = await Horario.create(
+                    {
+                    id_medico: data.idMedico,
+                    titulo: data.titulo,
+                    fecha: data.fecha,
+                    hora_inicio: data.hora_inicio,
+                    hora_fin: data.hora_fin,
+                    modalidad: data.modalidad,
+                    estado: "OCUPADO",
+                    fecha_registro: new Date(),
+                    fecha_actualizacion: new Date(),
+                    },
+                    { transaction: t }
+                );
+          }
 
             // ----- VALIDAR CITA -----
             const citaExistente = await Cita.findOne({
@@ -104,6 +106,33 @@ class CitaService {
 
       return cita;
     });
+  }
+
+  static async obtenerCitasPorPaciente(idPaciente: number) {
+    try {
+      const citas = await Cita.findAll({
+        where: { id_paciente: idPaciente },
+        include: [
+          {
+            model: Horario,
+            include: [
+              {
+                model: Medico,
+                as: 'medico',
+                attributes: ['id_medico', 'nro_colegiatura', 'anios_experiencia', 'calificacion_promedio']
+              }
+            ],
+            attributes: ['id_horario', 'titulo', 'fecha', 'hora_inicio', 'hora_fin', 'modalidad', 'estado']
+          }
+        ],
+        attributes: ['id_cita', 'estado', 'modalidad', 'fecha_registro', 'fecha_actualizacion'],
+        order: [['fecha_registro', 'DESC']]
+      });
+
+      return citas;
+    } catch (error) {
+      throw new Error(`Error al obtener las citas del paciente: ${error}`);
+    }
   }
 }
 

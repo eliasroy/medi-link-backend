@@ -146,7 +146,6 @@ class HorarioService {
   ) {
     try {
       const whereConditions: any = {
-        estado: "DISPONIBLE",
         fecha: {
           [Op.between]: [fechaInicio, fechaFin]
         }
