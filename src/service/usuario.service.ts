@@ -2,7 +2,6 @@ import bcrypt from "bcrypt";
 import { Usuario } from "../model/usuario.model";
 import { Paciente } from "../model/paciente.model";
 import { Medico } from "../model/medico.model";
-
 interface RegistroPaciente {
   nombre: string;
   paterno: string;
