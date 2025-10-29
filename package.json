@@ -18,9 +18,33 @@
     "start": "tsc && node dist/app.js",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage",
+    "test:coverage": "jest --coverage --coverageDirectory=coverage",
+    "test:istanbul": "nyc --reporter=html --reporter=text jest",
     "test:auth": "jest --testPathPattern=auth.service",
+    "test:report": "npm run test:coverage && start coverage/index.html",
     "build": "tsc"
+  },
+  "nyc": {
+    "extends": "@istanbuljs/nyc-config-typescript",
+    "check-coverage": false,
+    "all": true,
+    "include": [
+      "src/**/*.ts"
+    ],
+    "exclude": [
+      "src/**/*.spec.ts",
+      "src/**/*.test.ts",
+      "src/**/__tests__/**",
+      "src/dataFaker.ts",
+      "node_modules",
+      "dist"
+    ],
+    "reporter": [
+      "text",
+      "html",
+      "lcov"
+    ],
+    "report-dir": "coverage"
   },
   "dependencies": {
     "@faker-js/faker": "^10.0.0",
@@ -38,11 +62,14 @@
     "typescript": "^5.9.2"
   },
   "devDependencies": {
+    "@istanbuljs/nyc-config-typescript": "^1.0.2",
     "@types/cors": "^2.8.19",
     "@types/jest": "^30.0.0",
     "@types/node": "^24.3.1",
     "@types/supertest": "^6.0.3",
     "jest": "^30.2.0",
+    "jest-html-reporters": "^3.1.7",
+    "nyc": "^17.1.0",
     "supertest": "^7.1.4",
     "ts-jest": "^29.4.5"
   }
