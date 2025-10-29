@@ -26,7 +26,7 @@ export const login = async (email: string, password: string) => {
   if (idUser === null) {
     throw new Error("El usuario no tiene perfil de MÉDICO o PACIENTE");
   }
-console.log(idUser);
+
   const token = jwt.sign(
     { id: idUser, rol: usuario.rol },
     process.env.JWT_SECRET as string,
