@@ -186,6 +186,96 @@ describe('Medico Service - Tests Completos', () => {
       });
     });
 
+    it('debería filtrar médicos por apellido paterno', async () => {
+      // Arrange
+      const filtros = { paterno: 'Pérez' };
+      const mockMedicos = [
+        {
+          id_medico: 1,
+          nombre: 'Dr. Juan',
+          paterno: 'Pérez',
+          materno: 'García',
+          calificacion_promedio: 4.5,
+        },
+      ];
+
+      mockVistaMedicos.findAll = jest.fn().mockResolvedValue(mockMedicos as any);
+
+      // Act
+      const result = await listarMedicosFiltrados(filtros);
+
+      // Assert
+      expect(result).toEqual(mockMedicos);
+      expect(mockVistaMedicos.findAll).toHaveBeenCalledWith({
+        where: {
+          paterno: { [Op.like]: '%Pérez%' },
+        },
+        order: [['calificacion_promedio', 'DESC']],
+      });
+    });
+
+    it('debería filtrar médicos por apellido materno', async () => {
+      // Arrange
+      const filtros = { materno: 'García' };
+      const mockMedicos = [
+        {
+          id_medico: 1,
+          nombre: 'Dr. Juan',
+          paterno: 'Pérez',
+          materno: 'García',
+          calificacion_promedio: 4.5,
+        },
+      ];
+
+      mockVistaMedicos.findAll = jest.fn().mockResolvedValue(mockMedicos as any);
+
+      // Act
+      const result = await listarMedicosFiltrados(filtros);
+
+      // Assert
+      expect(result).toEqual(mockMedicos);
+      expect(mockVistaMedicos.findAll).toHaveBeenCalledWith({
+        where: {
+          materno: { [Op.like]: '%García%' },
+        },
+        order: [['calificacion_promedio', 'DESC']],
+      });
+    });
+
+    it('debería filtrar médicos por nombre, paterno y materno simultáneamente', async () => {
+      // Arrange
+      const filtros = {
+        nombre: 'Juan',
+        paterno: 'Pérez',
+        materno: 'García',
+      };
+      const mockMedicos = [
+        {
+          id_medico: 1,
+          nombre: 'Dr. Juan',
+          paterno: 'Pérez',
+          materno: 'García',
+          calificacion_promedio: 4.5,
+        },
+      ];
+
+      mockVistaMedicos.findAll = jest.fn().mockResolvedValue(mockMedicos as any);
+
+      // Act
+      const result = await listarMedicosFiltrados(filtros);
+
+      // Assert
+      expect(result).toEqual(mockMedicos);
+      expect(mockVistaMedicos.findAll).toHaveBeenCalledWith({
+        where: {
+          nombre: { [Op.like]: '%Juan%' },
+          paterno: { [Op.like]: '%Pérez%' },
+          materno: { [Op.like]: '%García%' },
+        },
+        order: [['calificacion_promedio', 'DESC']],
+      });
+    });
+
     it('debería retornar lista vacía cuando no hay médicos que coincidan', async () => {
       // Arrange
       const filtros = { nombre: 'NoExiste' };
