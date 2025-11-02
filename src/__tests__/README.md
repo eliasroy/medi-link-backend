@@ -18,8 +18,11 @@ __tests__/
 │   ├── passwordChange/
 │   │   ├── passwordChange.controller.test.ts # Tests del controlador de cambio de contraseña
 │   │   └── README.md                 # Documentación detallada de tests del controlador
-│   └── medico/
-│       ├── medico.controller.test.ts # Tests del controlador de médico
+│   ├── medico/
+│   │   ├── medico.controller.test.ts # Tests del controlador de médico
+│   │   └── README.md                 # Documentación detallada de tests del controlador
+│   └── especialidad/
+│       ├── especialidad.controller.test.ts # Tests del controlador de especialidad
 │       └── README.md                 # Documentación detallada de tests del controlador
 └── service/                           # Tests de servicios
     ├── auth/
@@ -31,8 +34,11 @@ __tests__/
     ├── passwordChange/
     │   ├── passwordChange.service.test.ts # Tests del servicio de cambio de contraseña
     │   └── README.md                 # Documentación detallada de tests del servicio
-    └── medico/
-        ├── medico.service.test.ts    # Tests del servicio de médico
+    ├── medico/
+    │   ├── medico.service.test.ts    # Tests del servicio de médico
+    │   └── README.md                 # Documentación detallada de tests del servicio
+    └── especialidad/
+        ├── especialidad.service.test.ts # Tests del servicio de especialidad
         └── README.md                 # Documentación detallada de tests del servicio
 ```
 
@@ -66,6 +72,12 @@ Cada archivo de test tiene su propio README con explicaciones detalladas de cada
   - Tests para listado y filtrado de médicos
   - Casos comunes, límite y excepciones
 
+- **[`controller/especialidad/README.md`](./controller/especialidad/README.md)**
+  - Documentación completa de `especialidad.controller.test.ts`
+  - Explicación de cada test del controlador de especialidad
+  - Tests para obtener todas las especialidades
+  - Casos comunes, límite y excepciones
+
 ### Servicios
 
 - **[`service/auth/README.md`](./service/auth/README.md)**
@@ -90,6 +102,12 @@ Cada archivo de test tiene su propio README con explicaciones detalladas de cada
   - Documentación completa de `medico.service.test.ts`
   - Explicación detallada de cada test del servicio de médico
   - Tests para función `listarMedicosFiltrados`
+  - Análisis completo de casos normales, límite y excepciones
+
+- **[`service/especialidad/README.md`](./service/especialidad/README.md)**
+  - Documentación completa de `especialidad.service.test.ts`
+  - Explicación detallada de cada test del servicio de especialidad
+  - Tests para método `obtenerTodas`
   - Análisis completo de casos normales, límite y excepciones
 
 ## 🎯 Resumen de Cobertura de Tests
@@ -271,6 +289,44 @@ Cada archivo de test tiene su propio README con explicaciones detalladas de cada
 - Respuesta 500 ante error inesperado del servicio
 - Respuesta 500 cuando la vista no está disponible
 
+### Tests del Servicio de Especialidad (`especialidad.service.test.ts`)
+
+#### ✅ Casos Normales (Happy Path)
+- Retornar todas las especialidades ordenadas por nombre ascendente
+- Retornar lista vacía cuando no hay especialidades
+- Retornar especialidades con todas sus propiedades
+
+#### ❌ Casos Límite (Edge Cases)
+- Manejar una sola especialidad
+- Manejar muchas especialidades (límite superior)
+- Ordenar correctamente por nombre ascendente
+- Manejar nombres con caracteres especiales
+
+#### ⚠️ Casos de Excepción (Exception Cases)
+- Error de conexión a base de datos
+- Timeout de base de datos
+- Error genérico del servicio
+- Error cuando la tabla no existe
+
+### Tests del Controlador de Especialidad (`especialidad.controller.test.ts`)
+
+#### ✅ Casos Comunes
+- Respuesta 200 con todas las especialidades cuando la consulta es exitosa
+- Respuesta 200 con lista vacía cuando no hay especialidades
+- Respuesta con formato correcto de respuesta exitosa
+
+#### ❌ Casos Límite
+- Respuesta 200 cuando hay una sola especialidad
+- Respuesta 200 cuando hay muchas especialidades
+- Manejo de especialidades con caracteres especiales en nombres
+
+#### ⚠️ Casos de Excepción
+- Respuesta 500 ante error de conexión a base de datos
+- Respuesta 500 ante timeout de base de datos
+- Respuesta 500 ante error inesperado del servicio
+- Respuesta 500 cuando la tabla no está disponible
+- Mantener formato de error consistente
+
 ## 🚀 Comandos de Testing
 
 ### Comandos Generales
@@ -296,6 +352,9 @@ npm test -- passwordChange
 
 # Ejecutar solo los tests de médico
 npm test -- medico
+
+# Ejecutar solo los tests de especialidad
+npm test -- especialidad
 ```
 
 ### Comandos Específicos por Archivo
@@ -325,11 +384,18 @@ npm test -- medico.controller.test
 # Ejecutar solo los tests del servicio de médico
 npm test -- medico.service.test
 
+# Ejecutar solo los tests del controlador de especialidad
+npm test -- especialidad.controller.test
+
+# Ejecutar solo los tests del servicio de especialidad
+npm test -- especialidad.service.test
+
 # Ejecutar tests en modo watch para un archivo específico
 npm run test:watch -- auth.controller.test
 npm run test:watch -- usuario.controller.test
 npm run test:watch -- passwordChange.controller.test
 npm run test:watch -- medico.controller.test
+npm run test:watch -- especialidad.controller.test
 ```
 
 ## ⚙️ Configuración
