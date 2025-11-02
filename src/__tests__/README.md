@@ -12,15 +12,27 @@ __tests__/
 │   ├── auth/
 │   │   ├── auth.controller.test.ts   # Tests del controlador de autenticación
 │   │   └── README.md                 # Documentación detallada de tests del controlador
-│   └── usuario/
-│       ├── usuario.controller.test.ts # Tests del controlador de usuario
+│   ├── usuario/
+│   │   ├── usuario.controller.test.ts # Tests del controlador de usuario
+│   │   └── README.md                 # Documentación detallada de tests del controlador
+│   ├── passwordChange/
+│   │   ├── passwordChange.controller.test.ts # Tests del controlador de cambio de contraseña
+│   │   └── README.md                 # Documentación detallada de tests del controlador
+│   └── medico/
+│       ├── medico.controller.test.ts # Tests del controlador de médico
 │       └── README.md                 # Documentación detallada de tests del controlador
 └── service/                           # Tests de servicios
     ├── auth/
     │   ├── auth.test.ts              # Tests del servicio de autenticación
     │   └── README.md                 # Documentación detallada de tests del servicio
-    └── usuario/
-        ├── usuario.service.test.ts    # Tests del servicio de usuario
+    ├── usuario/
+    │   ├── usuario.service.test.ts    # Tests del servicio de usuario
+    │   └── README.md                 # Documentación detallada de tests del servicio
+    ├── passwordChange/
+    │   ├── passwordChange.service.test.ts # Tests del servicio de cambio de contraseña
+    │   └── README.md                 # Documentación detallada de tests del servicio
+    └── medico/
+        ├── medico.service.test.ts    # Tests del servicio de médico
         └── README.md                 # Documentación detallada de tests del servicio
 ```
 
@@ -42,6 +54,18 @@ Cada archivo de test tiene su propio README con explicaciones detalladas de cada
   - Tests para registro de pacientes y médicos
   - Casos comunes, límite y excepciones
 
+- **[`controller/passwordChange/README.md`](./controller/passwordChange/README.md)**
+  - Documentación completa de `passwordChange.controller.test.ts`
+  - Explicación de cada test del controlador de cambio de contraseña
+  - Tests para validaciones de campos y formato
+  - Casos comunes, límite y excepciones
+
+- **[`controller/medico/README.md`](./controller/medico/README.md)**
+  - Documentación completa de `medico.controller.test.ts`
+  - Explicación de cada test del controlador de médico
+  - Tests para listado y filtrado de médicos
+  - Casos comunes, límite y excepciones
+
 ### Servicios
 
 - **[`service/auth/README.md`](./service/auth/README.md)**
@@ -54,6 +78,18 @@ Cada archivo de test tiene su propio README con explicaciones detalladas de cada
   - Documentación completa de `usuario.service.test.ts`
   - Explicación detallada de cada test del servicio de usuario
   - Tests para funciones `registrarPaciente` y `registrarMedico`
+  - Análisis completo de casos normales, límite y excepciones
+
+- **[`service/passwordChange/README.md`](./service/passwordChange/README.md)**
+  - Documentación completa de `passwordChange.service.test.ts`
+  - Explicación detallada de cada test del servicio de cambio de contraseña
+  - Tests para función `changePasswordByEmail`
+  - Análisis completo de casos normales, límite y excepciones
+
+- **[`service/medico/README.md`](./service/medico/README.md)**
+  - Documentación completa de `medico.service.test.ts`
+  - Explicación detallada de cada test del servicio de médico
+  - Tests para función `listarMedicosFiltrados`
   - Análisis completo de casos normales, límite y excepciones
 
 ## 🎯 Resumen de Cobertura de Tests
@@ -145,6 +181,96 @@ Cada archivo de test tiene su propio README con explicaciones detalladas de cada
 - Respuesta 400 ante error de bcrypt
 - Respuesta 400 ante timeout de base de datos
 
+### Tests del Servicio de Cambio de Contraseña (`passwordChange.service.test.ts`)
+
+#### ✅ Casos Normales (Happy Path)
+- Cambio de contraseña exitoso cuando el usuario existe
+- Cambio de contraseña exitoso para un médico
+- Actualización correcta de fecha_actualizacion
+
+#### ❌ Casos Límite (Edge Cases)
+- Email con formato límite (muy largo)
+- Contraseña muy corta (mínimo permitido)
+- Contraseña muy larga
+- Email con caracteres especiales
+- Contraseña con caracteres especiales
+
+#### ⚠️ Casos de Excepción (Exception Cases)
+- Error cuando el usuario no existe
+- Error cuando el email está vacío
+- Error de bcrypt al hashear contraseña
+- Error de base de datos al buscar usuario
+- Error de base de datos al actualizar usuario
+- Timeout de conexión a base de datos
+- Error genérico del servicio
+
+### Tests del Controlador de Cambio de Contraseña (`passwordChange.controller.test.ts`)
+
+#### ✅ Casos Comunes
+- Respuesta 200 cuando el cambio de contraseña es exitoso
+- Respuesta 200 cuando el cambio es exitoso para un médico
+
+#### ❌ Casos Límite
+- Respuesta 400 cuando falta email
+- Respuesta 400 cuando falta newPassword
+- Respuesta 400 cuando ambos campos están vacíos
+- Respuesta 400 cuando el email tiene formato inválido (varios casos)
+- Respuesta 400 cuando la contraseña tiene menos de 6 caracteres
+- Respuesta 200 cuando la contraseña tiene exactamente 6 caracteres
+- Aceptación de email con formato válido complejo
+
+#### ⚠️ Casos de Excepción
+- Respuesta 400 cuando el usuario no existe
+- Respuesta 400 ante error de conexión a base de datos
+- Respuesta 400 ante error de bcrypt
+- Respuesta 400 ante error inesperado del servicio
+- Respuesta 400 ante timeout de base de datos
+
+### Tests del Servicio de Médico (`medico.service.test.ts`)
+
+#### ✅ Casos Normales (Happy Path)
+- Listar todos los médicos sin filtros
+- Filtrar médicos por nombre
+- Filtrar médicos por múltiples filtros
+- Filtrar por especialidad (texto)
+- Filtrar por número de colegiatura
+- Retornar lista vacía cuando no hay coincidencias
+
+#### ❌ Casos Límite (Edge Cases)
+- Filtros con valores vacíos
+- Nombres con caracteres especiales
+- Valores numéricos límite (calificación, años de experiencia)
+- id_especialidad como string y número
+- Ordenamiento por calificación descendente siempre
+
+#### ⚠️ Casos de Excepción (Exception Cases)
+- Error de conexión a base de datos
+- Timeout de base de datos
+- Error genérico del servicio
+- Error cuando VistaMedicos no está disponible
+- Manejo de filtros con valores null/undefined
+
+### Tests del Controlador de Médico (`medico.controller.test.ts`)
+
+#### ✅ Casos Comunes
+- Respuesta 200 con lista de médicos sin filtros
+- Respuesta 200 con médicos filtrados por nombre
+- Respuesta 200 con médicos filtrados por múltiples parámetros
+- Respuesta 200 con lista vacía cuando no hay médicos
+
+#### ❌ Casos Límite
+- Query params con valores vacíos
+- Query params con valores numéricos como strings
+- Nombres con caracteres especiales en query params
+- Filtro por especialidad como texto
+- Filtro por número de colegiatura
+
+#### ⚠️ Casos de Excepción
+- Respuesta 500 ante error de conexión a base de datos
+- Respuesta 500 ante timeout de base de datos
+- Respuesta 500 ante error inesperado del servicio
+- Respuesta 500 cuando la vista no está disponible
+
 ## 🚀 Comandos de Testing
 
 ### Comandos Generales
@@ -164,6 +290,12 @@ npm run test:auth
 
 # Ejecutar solo los tests de usuario
 npm test -- usuario
+
+# Ejecutar solo los tests de cambio de contraseña
+npm test -- passwordChange
+
+# Ejecutar solo los tests de médico
+npm test -- medico
 ```
 
 ### Comandos Específicos por Archivo
@@ -181,9 +313,23 @@ npm test -- usuario.controller.test
 # Ejecutar solo los tests del servicio de usuario
 npm test -- usuario.service.test
 
+# Ejecutar solo los tests del controlador de cambio de contraseña
+npm test -- passwordChange.controller.test
+
+# Ejecutar solo los tests del servicio de cambio de contraseña
+npm test -- passwordChange.service.test
+
+# Ejecutar solo los tests del controlador de médico
+npm test -- medico.controller.test
+
+# Ejecutar solo los tests del servicio de médico
+npm test -- medico.service.test
+
 # Ejecutar tests en modo watch para un archivo específico
 npm run test:watch -- auth.controller.test
 npm run test:watch -- usuario.controller.test
+npm run test:watch -- passwordChange.controller.test
+npm run test:watch -- medico.controller.test
 ```
 
 ## ⚙️ Configuración
