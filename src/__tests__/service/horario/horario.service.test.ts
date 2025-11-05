@@ -203,6 +203,87 @@ describe('HorarioService - Tests Completos', () => {
       await expect(HorarioService.crearHorario(idMedico, data)).rejects.toThrow('Ya existe un horario en esa fecha y hora');
     });
 
+    it('debería lanzar error cuando encuentra un horario cancelado en la validación', async () => {
+      // Arrange - Datos de prueba
+      const idMedico = 1;
+      const data = {
+        fecha: '2024-12-01',
+        hora_inicio: '09:00:00',
+        hora_fin: '10:00:00',
+        modalidad: 'PRESENCIAL' as const,
+      };
+
+      const mockHorarioCancelado = {
+        id_horario: 1,
+        id_medico: idMedico,
+        fecha: data.fecha,
+        hora_inicio: '09:30:00',
+        hora_fin: '10:30:00',
+        estado: 'CANCELADO',
+      };
+
+      // Mock de transacción
+      const mockTransactionInstance = {
+        commit: jest.fn(),
+        rollback: jest.fn(),
+      } as any;
+      mockSequelizeTransaction.mockImplementation(async (callback: any) => {
+        return await callback(mockTransactionInstance);
+      });
+
+      // Mock de búsqueda de horario existente (encuentra uno cancelado)
+      mockHorarioFindOne.mockResolvedValue(mockHorarioCancelado);
+
+      // Act & Assert
+      await expect(HorarioService.crearHorario(idMedico, data)).rejects.toThrow('Ya existe un horario en esa fecha y hora');
+    });
+
+    it('debería crear horario exitosamente cuando existe uno cancelado que se solapa', async () => {
+      // Arrange - Datos de prueba
+      const idMedico = 1;
+      const data = {
+        fecha: '2024-12-01',
+        hora_inicio: '09:00:00',
+        hora_fin: '10:00:00',
+        modalidad: 'PRESENCIAL' as const,
+      };
+
+      const mockHorarioCreado = {
+        id_horario: 2,
+        id_medico: idMedico,
+        fecha: data.fecha,
+        hora_inicio: data.hora_inicio,
+        hora_fin: data.hora_fin,
+        modalidad: data.modalidad,
+        estado: 'DISPONIBLE',
+        fecha_registro: new Date(),
+        fecha_actualizacion: new Date(),
+      };
+
+      // Mock de transacción
+      const mockTransactionInstance = {
+        commit: jest.fn(),
+        rollback: jest.fn(),
+      } as any;
+      mockSequelizeTransaction.mockImplementation(async (callback: any) => {
+        return await callback(mockTransactionInstance);
+      });
+
+      // Mock de búsqueda de horario existente (no encuentra porque el cancelado se ignora)
+      mockHorarioFindOne.mockResolvedValue(null);
+
+      // Mock de creación de horario
+      mockHorarioCreate.mockResolvedValue(mockHorarioCreado);
+
+      // Act - Ejecutar la función
+      const result = await HorarioService.crearHorario(idMedico, data);
+
+      // Assert - Verificar resultados
+      expect(result).toEqual(mockHorarioCreado);
+      expect(mockHorarioFindOne).toHaveBeenCalled();
+      expect(mockHorarioCreate).toHaveBeenCalled();
+    });
+
     it('debería filtrar horarios por idMedico', async () => {
       // Arrange - Datos de prueba
       const filtros = { idMedico: 1 };
@@ -306,6 +387,133 @@ describe('HorarioService - Tests Completos', () => {
 
       // Act - Ejecutar la función
       const result = await HorarioService.obtenerHorariosDisponiblesPorRango(fechaInicio, fechaFin, filtros);
+
+      // Assert - Verificar resultados
+      expect(result).toEqual(mockHorarios);
+      expect(mockHorarioFindAll).toHaveBeenCalled();
+    });
+
+    it('debería filtrar horarios por rango con idMedico', async () => {
+      // Arrange - Datos de prueba
+      const fechaInicio = '2024-12-01';
+      const fechaFin = '2024-12-07';
+      const filtros = { idMedico: 1 };
+      const mockHorarios = [
+        {
+          id_horario: 1,
+          id_medico: 1,
+          fecha: '2024-12-01',
+          hora_inicio: '09:00:00',
+          hora_fin: '10:00:00',
+          modalidad: 'PRESENCIAL',
+          estado: 'DISPONIBLE',
+          medico: {
+            id_medico: 1,
+            nombre: 'Dr. Juan',
+            especialidad: { nombre: 'Cardiología' }
+          }
+        }
+      ];
+
+      // Mock de findAll
+      mockHorarioFindAll.mockResolvedValue(mockHorarios);
+
+      // Act - Ejecutar la función
+      const result = await HorarioService.obtenerHorariosDisponiblesPorRango(fechaInicio, fechaFin, filtros);
+
+      // Assert - Verificar resultados
+      expect(result).toEqual(mockHorarios);
+      expect(mockHorarioFindAll).toHaveBeenCalled();
+    });
+
+    it('debería filtrar horarios por rango con modalidad', async () => {
+      // Arrange - Datos de prueba
+      const fechaInicio = '2024-12-01';
+      const fechaFin = '2024-12-07';
+      const filtros = { modalidad: 'VIRTUAL' as const };
+      const mockHorarios = [
+        {
+          id_horario: 1,
+          fecha: '2024-12-01',
+          hora_inicio: '09:00:00',
+          hora_fin: '10:00:00',
+          modalidad: 'VIRTUAL',
+          estado: 'DISPONIBLE',
+          medico: {
+            id_medico: 1,
+            nombre: 'Dr. Juan',
+            especialidad: { nombre: 'Cardiología' }
+          }
+        }
+      ];
+
+      // Mock de findAll
+      mockHorarioFindAll.mockResolvedValue(mockHorarios);
+
+      // Act - Ejecutar la función
+      const result = await HorarioService.obtenerHorariosDisponiblesPorRango(fechaInicio, fechaFin, filtros);
+
+      // Assert - Verificar resultados
+      expect(result).toEqual(mockHorarios);
+      expect(mockHorarioFindAll).toHaveBeenCalled();
+    });
+
+    it('debería filtrar horarios por rango con estado', async () => {
+      // Arrange - Datos de prueba
+      const fechaInicio = '2024-12-01';
+      const fechaFin = '2024-12-07';
+      const filtros = { estado: 'DISPONIBLE' };
+      const mockHorarios = [
+        {
+          id_horario: 1,
+          fecha: '2024-12-01',
+          hora_inicio: '09:00:00',
+          hora_fin: '10:00:00',
+          modalidad: 'PRESENCIAL',
+          estado: 'DISPONIBLE',
+          medico: {
+            id_medico: 1,
+            nombre: 'Dr. Juan',
+            especialidad: { nombre: 'Cardiología' }
+          }
+        }
+      ];
+
+      // Mock de findAll
+      mockHorarioFindAll.mockResolvedValue(mockHorarios);
+
+      // Act - Ejecutar la función
+      const result = await HorarioService.obtenerHorariosDisponiblesPorRango(fechaInicio, fechaFin, filtros);
+
+      // Assert - Verificar resultados
+      expect(result).toEqual(mockHorarios);
+      expect(mockHorarioFindAll).toHaveBeenCalled();
+    });
+
+    it('debería filtrar horarios de semana por estado', async () => {
+      // Arrange - Datos de prueba
+      const filtros = { estado: 'DISPONIBLE' };
+      const mockHorarios = [
+        {
+          id_horario: 1,
+          fecha: '2024-12-01',
+          hora_inicio: '09:00:00',
+          hora_fin: '10:00:00',
+          modalidad: 'PRESENCIAL',
+          estado: 'DISPONIBLE',
+          medico: {
+            id_medico: 1,
+            nombre: 'Dr. Juan',
+            especialidad: { nombre: 'Cardiología' }
+          }
+        }
+      ];
+
+      // Mock de findAll
+      mockHorarioFindAll.mockResolvedValue(mockHorarios);
+
+      // Act - Ejecutar la función
+      const result = await HorarioService.obtenerHorariosDisponiblesSemana(filtros);
 
       // Assert - Verificar resultados
       expect(result).toEqual(mockHorarios);
@@ -544,6 +752,17 @@ describe('HorarioService - Tests Completos', () => {
       await expect(HorarioService.obtenerHorariosDisponiblesSemana(filtros)).rejects.toThrow('Error al obtener horarios disponibles de la semana');
     });
 
+    it('debería ejecutar catch branch en obtenerHorariosDisponiblesSemana', async () => {
+      // Arrange - Datos de prueba
+      const filtros = {};
+
+      // Mock de error en findAll para forzar catch
+      jest.spyOn(Horario, "findAll").mockRejectedValue(new Error("test error"));
+
+      // Act & Assert
+      await expect(HorarioService.obtenerHorariosDisponiblesSemana(filtros)).rejects.toThrow('Error al obtener horarios disponibles de la semana');
+    });
+
     it('debería manejar error de base de datos al obtener horarios por rango', async () => {
       // Arrange - Datos de prueba
       const fechaInicio = '2024-12-01';
@@ -553,6 +772,19 @@ describe('HorarioService - Tests Completos', () => {
 
       // Mock de error en findAll
       mockHorarioFindAll.mockRejectedValue(dbError);
+
+      // Act & Assert
+      await expect(HorarioService.obtenerHorariosDisponiblesPorRango(fechaInicio, fechaFin, filtros)).rejects.toThrow('Error al obtener horarios disponibles por rango');
+    });
+
+    it('debería ejecutar catch branch en obtenerHorariosDisponiblesPorRango', async () => {
+      // Arrange - Datos de prueba
+      const fechaInicio = '2024-12-01';
+      const fechaFin = '2024-12-07';
+      const filtros = {};
+
+      // Mock de error en findAll para forzar catch
+      jest.spyOn(Horario, "findAll").mockRejectedValue(new Error("test error"));
 
       // Act & Assert
       await expect(HorarioService.obtenerHorariosDisponiblesPorRango(fechaInicio, fechaFin, filtros)).rejects.toThrow('Error al obtener horarios disponibles por rango');

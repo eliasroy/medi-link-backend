@@ -68,62 +68,9 @@ class HorarioService {
     estado?: string;
     modalidad?: "PRESENCIAL" | "VIRTUAL";
   } = {}) {
-    try {
-      // Calcular inicio y fin de la semana actual
-      const hoy = new Date();
-      const inicioSemana = new Date(hoy);
-      inicioSemana.setDate(hoy.getDate() - hoy.getDay()); // Domingo
-      inicioSemana.setHours(0, 0, 0, 0);
-      
-      const finSemana = new Date(inicioSemana);
-      finSemana.setDate(inicioSemana.getDate() + 6); // Sábado
-      finSemana.setHours(23, 59, 59, 999);
+    const { whereConditions, includeOptions } = this._buildQuerySemana(filtros);
 
-      // Construir condiciones de búsqueda
-      const whereConditions: any = {
-        fecha: {
-          [Op.between]: [inicioSemana, finSemana]
-        }
-      };
-
-      if (filtros.idMedico) {
-        whereConditions.id_medico = filtros.idMedico;
-      }
-
-      if (filtros.modalidad) {
-        whereConditions.modalidad = filtros.modalidad;
-      }
-      if (filtros.estado) {
-        whereConditions.estado = filtros.estado;
-      }
-      // Construir include para joins
-      const includeOptions: any = [
-        {
-          model: Medico,
-          as: 'medico',
-          include: [
-            {
-              model: Especialidad,
-              as: 'especialidad'
-            }
-          ]
-        }
-      ];
-
- 
-      const horarios = await Horario.findAll({
-        where: whereConditions,
-        include: includeOptions,
-        order: [
-          ['fecha', 'ASC'],
-          ['hora_inicio', 'ASC']
-        ]
-      });
-
-      return horarios;
-    } catch (error) {
-      throw new Error("Error al obtener horarios disponibles de la semana");
-    }
+    return this._findHorariosSemana(whereConditions, includeOptions);
   }
 
   /**
@@ -142,51 +89,132 @@ class HorarioService {
       modalidad?: "PRESENCIAL" | "VIRTUAL";
     } = {}
   ) {
-    try {
-      const whereConditions: any = {
-        fecha: {
-          [Op.between]: [fechaInicio, fechaFin]
-        }
-      };
+    const { whereConditions, includeOptions } = this._buildQueryRango(fechaInicio, fechaFin, filtros);
 
-      if (filtros.idMedico) {
-        whereConditions.id_medico = filtros.idMedico;
-      }
+    return this._findHorariosRango(whereConditions, includeOptions);
+  }
 
-      if (filtros.modalidad) {
-        whereConditions.modalidad = filtros.modalidad;
-      }
-      if (filtros.estado) {
-        whereConditions.estado = filtros.estado;
-      }
-      const includeOptions: any = [
-        {
-          model: Medico,
-          as: 'medico',
-          include: [
-            {
-              model: Especialidad,
-              as: 'especialidad'
-            }
-          ]
-        }
-      ];
+  /**
+   * Helper method to find horarios for semana with error handling
+   */
+  private static async _findHorariosSemana(whereConditions: any, includeOptions: any) {
+    return Horario.findAll({
+      where: whereConditions,
+      include: includeOptions,
+      order: [
+        ['fecha', 'ASC'],
+        ['hora_inicio', 'ASC']
+      ]
+    }).catch(error => {
+      throw new Error("Error al obtener horarios disponibles de la semana");
+    });
+  }
 
-  
-
-      const horarios = await Horario.findAll({
-        where: whereConditions,
-        include: includeOptions,
-        order: [
-          ['fecha', 'ASC'],
-          ['hora_inicio', 'ASC']
-        ]
-      });
-
-      return horarios;
-    } catch (error) {
+  /**
+   * Helper method to find horarios for rango with error handling
+   */
+  private static async _findHorariosRango(whereConditions: any, includeOptions: any) {
+    return Horario.findAll({
+      where: whereConditions,
+      include: includeOptions,
+      order: [
+        ['fecha', 'ASC'],
+        ['hora_inicio', 'ASC']
+      ]
+    }).catch(error => {
       throw new Error("Error al obtener horarios disponibles por rango");
+    });
+  }
+
+  /**
+   * Builds query conditions for semana
+   */
+  private static _buildQuerySemana(filtros: {
+    idMedico?: number;
+    estado?: string;
+    modalidad?: "PRESENCIAL" | "VIRTUAL";
+  }) {
+    const now = new Date();
+    const startOfWeek = new Date(now);
+    startOfWeek.setDate(now.getDate() - now.getDay()); // Domingo de esta semana
+    startOfWeek.setHours(0, 0, 0, 0);
+
+    const endOfWeek = new Date(startOfWeek);
+    endOfWeek.setDate(startOfWeek.getDate() + 6); // Sábado de esta semana
+    endOfWeek.setHours(23, 59, 59, 999);
+
+    const whereConditions: any = {
+      fecha: {
+        [Op.between]: [startOfWeek.toISOString().split('T')[0], endOfWeek.toISOString().split('T')[0]]
+      },
+      estado: filtros.estado || "DISPONIBLE"
+    };
+
+    if (filtros.idMedico) {
+      whereConditions.id_medico = filtros.idMedico;
     }
+
+    if (filtros.modalidad) {
+      whereConditions.modalidad = filtros.modalidad;
+    }
+
+    const includeOptions = [
+      {
+        model: Medico,
+        as: 'medico',
+        attributes: ['id_medico', 'nombre', 'apellido_paterno', 'apellido_materno'],
+        include: [
+          {
+            model: Especialidad,
+            as: 'especialidad',
+            attributes: ['id_especialidad', 'nombre']
+          }
+        ]
+      }
+    ];
+
+    return { whereConditions, includeOptions };
+  }
+
+  /**
+   * Builds query conditions for rango
+   */
+  private static _buildQueryRango(fechaInicio: string, fechaFin: string, filtros: {
+    idMedico?: number;
+    estado?: string;
+    modalidad?: "PRESENCIAL" | "VIRTUAL";
+  }) {
+    const whereConditions: any = {
+      fecha: {
+        [Op.between]: [fechaInicio, fechaFin]
+      },
+      estado: filtros.estado || "DISPONIBLE"
+    };
+
+    if (filtros.idMedico) {
+      whereConditions.id_medico = filtros.idMedico;
+    }
+
+    if (filtros.modalidad) {
+      whereConditions.modalidad = filtros.modalidad;
+    }
+
+    const includeOptions = [
+      {
+        model: Medico,
+        as: 'medico',
+        attributes: ['id_medico', 'nombre', 'apellido_paterno', 'apellido_materno'],
+        include: [
+          {
+            model: Especialidad,
+            as: 'especialidad',
+            attributes: ['id_especialidad', 'nombre']
+          }
+        ]
+      }
+    ];
+
+    return { whereConditions, includeOptions };
   }
 }
 
