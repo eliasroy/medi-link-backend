@@ -23,6 +23,10 @@ app.use("/api/citas", citaRoutes);
 app.use("/api/horarios", horarioRoutes);
 app.use("/api/especialidades", especialidadRoutes);
 app.use("/api/consultas",consultaRoutes);
+app.use((req, res, next) => {
+  console.log(req.method, req.url, req.body);
+  next();
+});
 (async () => {
   await conectarDB();
   await sequelize.sync();
@@ -31,7 +35,3 @@ app.use("/api/consultas",consultaRoutes);
     console.log(` Servidor corriendo en http://localhost:${PORT}`);
   });
 })();
-app.use((req, res, next) => {
-  console.log(req.method, req.url, req.body);
-  next();
-});
