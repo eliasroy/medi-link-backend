@@ -226,7 +226,7 @@ class CitaService {
         await (horario as any).update({ estado: "DISPONIBLE", fecha_actualizacion: new Date() }, { transaction: t });
       }
 
-      return { id_cita: (cita as any).id_cita, estado: (cita as any).estado };
+      return { id_cita: (cita as any).id_cita, estado: "CANCELADA" };
     });
   }
 }
