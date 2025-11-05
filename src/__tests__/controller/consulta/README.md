@@ -1,84 +1,84 @@
-# Consulta Controller Tests
+# Pruebas Unitarias - ConsultaController
 
-## Overview
+## Descripción General
 
-This directory contains comprehensive unit tests for the `ConsultaController` class, which handles HTTP requests and responses for medical consultation operations.
+Este directorio contiene pruebas unitarias completas para la clase `ConsultaController`, que maneja las solicitudes HTTP y respuestas para las operaciones de gestión de consultas médicas.
 
-## What the Consulta Module Does
+## Qué Hace el Módulo Consulta
 
-The Consulta controller provides REST API endpoints for managing medical consultations:
+El controlador Consulta proporciona endpoints de API REST para gestionar consultas médicas:
 
-- **POST /consulta/iniciar**: Initiates a new consultation for a scheduled appointment
-- **PUT /consulta/:id_consulta**: Updates consultation details and progress
-- **POST /consulta/calificar**: Allows patients to rate completed consultations
-- **GET /consulta/cita/:idCita**: Retrieves consultation details by appointment ID
+- **POST /consulta/iniciar**: Inicia una nueva consulta para una cita programada
+- **PUT /consulta/:id_consulta**: Actualiza los detalles y progreso de la consulta
+- **POST /consulta/calificar**: Permite a los pacientes calificar consultas completadas
+- **GET /consulta/cita/:idCita**: Recupera los detalles de consulta por ID de cita
 
-### Key Features
+### Características Clave
 
-1. **Authentication**: Uses JWT tokens to identify doctors and patients
-2. **Input Validation**: Validates request parameters and body data
-3. **Error Handling**: Provides consistent error responses with appropriate HTTP status codes
-4. **Response Formatting**: Standardizes API responses with success/data structure
+1. **Autenticación**: Utiliza tokens JWT para identificar médicos y pacientes
+2. **Validación de Entrada**: Valida parámetros de solicitud y datos del cuerpo
+3. **Manejo de Errores**: Proporciona respuestas de error consistentes con códigos de estado HTTP apropiados
+4. **Formato de Respuesta**: Estandariza las respuestas de API con estructura success/data
 
-## Test Structure
+## Estructura de Pruebas
 
-### Normal Cases
-- ✅ Successful consultation initiation with valid data
-- ✅ Successful consultation updates with complete and partial data
-- ✅ Successful consultation rating with valid scores
-- ✅ Successful consultation retrieval with proper authorization
+### Casos Normales
+- ✅ Inicio exitoso de consulta con datos válidos
+- ✅ Actualizaciones exitosas de consulta con datos completos y parciales
+- ✅ Calificación exitosa de consulta con puntajes válidos
+- ✅ Recuperación exitosa de consulta con autorización apropiada
 
-### Edge Cases
-- ✅ Handling missing optional fields in request bodies
-- ✅ Boundary validation for numeric inputs (IDs, ratings)
-- ✅ Invalid ID formats (non-numeric strings)
-- ✅ Empty or whitespace-only inputs
+### Casos Límite
+- ✅ Manejo de campos opcionales faltantes en cuerpos de solicitud
+- ✅ Validación de límites para entradas numéricas (IDs, calificaciones)
+- ✅ Formatos de ID inválidos (cadenas no numéricas)
+- ✅ Entradas vacías o solo con espacios en blanco
 
-### Exception Cases
-- ✅ Service layer errors (database failures, validation errors)
-- ✅ Authentication/authorization failures
-- ✅ Invalid request data formats
-- ✅ Missing required parameters
+### Casos de Excepción
+- ✅ Errores de capa de servicio (fallos de base de datos, errores de validación)
+- ✅ Fallos de autenticación/autorización
+- ✅ Formatos de datos de solicitud inválidos
+- ✅ Parámetros requeridos faltantes
 
-## Test Coverage
+## Cobertura de Pruebas
 
-The tests achieve 100% coverage for:
-- **Lines**: All executable lines are tested
-- **Statements**: All statements are executed
-- **Branches**: All conditional branches are covered
-- **Functions**: All controller methods are tested
+Las pruebas logran 100% de cobertura para:
+- **Líneas**: Todas las líneas ejecutables son probadas
+- **Sentencias**: Todas las sentencias son ejecutadas
+- **Ramas**: Todas las ramas condicionales están cubiertas
+- **Funciones**: Todos los métodos del controlador son probados
 
-## Running the Tests
+## Ejecutando las Pruebas
 
-### Prerequisites
-- Node.js and npm installed
-- Dependencies installed: `npm install`
+### Prerrequisitos
+- Node.js y npm instalados
+- Dependencias instaladas: `npm install`
 
-### Environment Variables
-Create a `.env.test` file with:
+### Variables de Entorno
+Crear un archivo `.env.test` con:
 ```
 JWT_SECRET=test-secret-key
 NODE_ENV=test
 ```
 
-### Execute Tests
+### Ejecutar Pruebas
 ```bash
-# Run all ConsultaController tests
+# Ejecutar todas las pruebas de ConsultaController
 npm test -- src/__tests__/controller/consulta/consulta.controller.test.ts
 
-# Run with coverage
+# Ejecutar con cobertura
 npm run test:coverage -- src/__tests__/controller/consulta/consulta.controller.test.ts
 
-# Run specific test suite
+# Ejecutar suite de pruebas específico
 npm test -- --testNamePattern="iniciarConsulta"
 ```
 
-### Coverage Report
-After running tests with coverage, view the report at:
-- **HTML Report**: `coverage/lcov-report/index.html`
-- **Console Output**: Shows coverage percentages in terminal
+### Reporte de Cobertura
+Después de ejecutar pruebas con cobertura, ver el reporte en:
+- **Reporte HTML**: `coverage/lcov-report/index.html`
+- **Salida de Consola**: Muestra porcentajes de cobertura en terminal
 
-## Test Output Example
+## Ejemplo de Salida de Prueba
 
 ```
 PASS src/__tests__/controller/consulta/consulta.controller.test.ts
@@ -98,64 +98,64 @@ consulta.controller.ts|     100 |      100 |     100 |     100 |                
 -------------------|---------|----------|---------|---------|-------------------
 ```
 
-## Dependencies Mocked
+## Dependencias Simuladas
 
-- **ConsultaService**: All business logic methods mocked
-- **Express Request/Response**: HTTP objects mocked with jest
-- **JWT Authentication**: User context mocked in request objects
+- **ConsultaService**: Todos los métodos de lógica de negocio simulados
+- **Express Request/Response**: Objetos HTTP simulados con jest
+- **JWT Authentication**: Contexto de usuario simulado en objetos de solicitud
 
-## AAA Pattern
+## Patrón AAA
 
-All tests follow the Arrange-Act-Assert pattern:
+Todas las pruebas siguen el patrón Arrange-Act-Assert:
 
 ```typescript
 it('should initiate consultation successfully', async () => {
-  // Arrange - Setup request, response, and service mocks
+  // Arrange - Configurar solicitud, respuesta y simulaciones de servicio
   const req = { body: { id_cita: 1, motivo: 'test' }, user: { id: 1 } };
   const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
   mockIniciarConsulta.mockResolvedValue(mockConsulta);
 
-  // Act - Call the controller method
+  // Act - Llamar al método del controlador
   await ConsultaController.iniciarConsulta(req, res);
 
-  // Assert - Verify response and service calls
+  // Assert - Verificar respuesta y llamadas al servicio
   expect(res.status).toHaveBeenCalledWith(201);
   expect(res.json).toHaveBeenCalledWith({ success: true, data: mockConsulta });
 });
 ```
 
-## Mock Factories
+## Fábricas de Simulación
 
-The tests use consistent mock data factories for:
-- Mock Express request objects with different body/params/user combinations
-- Mock Express response objects with status/json spying
-- Mock service responses for success and error scenarios
+Las pruebas utilizan fábricas de datos de simulación consistentes para:
+- Objetos de solicitud Express simulados con diferentes combinaciones body/params/user
+- Objetos de respuesta Express simulados con espionaje status/json
+- Respuestas de servicio simuladas para escenarios de éxito y error
 
-This ensures test reliability and maintainability.
+Esto asegura confiabilidad y mantenibilidad de las pruebas.
 
-## Error Response Format
+## Formato de Respuesta de Error
 
-All error responses follow the standard format:
+Todas las respuestas de error siguen el formato estándar:
 ```json
 {
   "success": false,
-  "message": "Error description"
+  "message": "Descripción del error"
 }
 ```
 
-## Success Response Format
+## Formato de Respuesta de Éxito
 
-All success responses follow the standard format:
+Todas las respuestas de éxito siguen el formato estándar:
 ```json
 {
   "success": true,
-  "data": { /* consultation data */ }
+  "data": { /* datos de consulta */ }
 }
 ```
 
-## HTTP Status Codes
+## Códigos de Estado HTTP
 
-- **200**: Successful updates and ratings
-- **201**: Successful consultation creation
-- **400**: Validation errors, business logic violations
-- **404**: Resource not found (handled in obtenerConsultaPorIdCita)
+- **200**: Actualizaciones y calificaciones exitosas
+- **201**: Creación exitosa de consulta
+- **400**: Errores de validación, violaciones de lógica de negocio
+- **404**: Recurso no encontrado (manejado en obtenerConsultaPorIdCita)

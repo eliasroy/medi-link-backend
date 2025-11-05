@@ -1,112 +1,112 @@
-# Consulta Module Tests - Complete Documentation
+# Pruebas del Módulo Consulta - Documentación Completa
 
-## Overview
+## Descripción General
 
-This directory contains comprehensive unit tests for the Consulta module, including both service and controller layers. The tests ensure complete coverage of the medical consultation functionality in the healthcare platform.
+Este directorio contiene pruebas unitarias completas para el módulo Consulta, incluyendo tanto las capas de servicio como de controlador. Las pruebas aseguran cobertura completa de la funcionalidad de consultas médicas en la plataforma de salud.
 
-## What the Consulta Module Does
+## Qué Hace el Módulo Consulta
 
-The Consulta module manages the complete lifecycle of medical consultations:
+El módulo Consulta gestiona el ciclo de vida completo de las consultas médicas:
 
-### Core Functionality
+### Funcionalidad Principal
 
-1. **Consultation Initiation** (`iniciarConsulta`)
-   - Starts a new consultation for a scheduled appointment
-   - Validates that the appointment exists and belongs to the requesting doctor
-   - Ensures no duplicate consultations for the same appointment
-   - Updates appointment status to CONFIRMADA
+1. **Inicio de Consulta** (`iniciarConsulta`)
+   - Inicia una nueva consulta para una cita programada
+   - Valida que la cita existe y pertenece al médico solicitante
+   - Asegura que no hay consultas duplicadas para la misma cita
+   - Actualiza el estado de la cita a CONFIRMADA
 
-2. **Consultation Updates** (`actualizarConsulta`)
-   - Allows doctors to update consultation progress and details
-   - Supports different workflows for PRESENCIAL vs VIRTUAL consultations
-   - Manages state transitions (INICIADO → EN_REVISION → DIAGNOSTICADA → FINALIZADA)
-   - Updates related appointment and schedule statuses when consultation is finalized
+2. **Actualizaciones de Consulta** (`actualizarConsulta`)
+   - Permite a los médicos actualizar el progreso y detalles de la consulta
+   - Soporta diferentes flujos de trabajo para consultas PRESENCIAL vs VIRTUAL
+   - Gestiona transiciones de estado (INICIADO → EN_REVISION → DIAGNOSTICADA → FINALIZADA)
+   - Actualiza estados relacionados de cita y horario cuando la consulta se finaliza
 
-3. **Consultation Rating** (`calificarConsulta`)
-   - Enables patients to rate completed consultations (1-10 scale)
-   - Validates that only patients can rate their own consultations
-   - Prevents duplicate ratings
-   - Only allows rating of FINALIZADA consultations
+3. **Calificación de Consulta** (`calificarConsulta`)
+   - Permite a los pacientes calificar consultas completadas (escala 1-10)
+   - Valida que solo los pacientes pueden calificar sus propias consultas
+   - Previene calificaciones duplicadas
+   - Solo permite calificar consultas FINALIZADA
 
-4. **Consultation Retrieval** (`obtenerConsultaPorIdCita`)
-   - Fetches consultation details by appointment ID
-   - Includes related appointment information
-   - Used for displaying consultation history and details
+4. **Recuperación de Consulta** (`obtenerConsultaPorIdCita`)
+   - Obtiene detalles de consulta por ID de cita
+   - Incluye información relacionada de la cita
+   - Usado para mostrar historial y detalles de consulta
 
-### Business Rules
+### Reglas de Negocio
 
-- **Authorization**: Doctors can only modify consultations for their own schedules
-- **State Management**: Strict state transition rules based on consultation modality
-- **Data Integrity**: All operations use database transactions
-- **Validation**: Comprehensive input validation and business rule enforcement
+- **Autorización**: Los médicos solo pueden modificar consultas de sus propios horarios
+- **Gestión de Estado**: Reglas estrictas de transición de estado basadas en modalidad de consulta
+- **Integridad de Datos**: Todas las operaciones usan transacciones de base de datos
+- **Validación**: Validación completa de entrada y aplicación de reglas de negocio
 
-## Test Structure
+## Estructura de Pruebas
 
-### Normal Cases
-- ✅ Successful operations with valid inputs and expected data flow
-- ✅ All CRUD operations working correctly
-- ✅ Proper authorization and state transitions
+### Casos Normales
+- ✅ Operaciones exitosas con entradas válidas y flujo de datos esperado
+- ✅ Todas las operaciones CRUD funcionando correctamente
+- ✅ Autorización apropiada y transiciones de estado
 
-### Edge Cases
-- ✅ Boundary values (rating limits: 1-10)
-- ✅ Missing optional fields handled gracefully
-- ✅ Empty results and rare valid scenarios
-- ✅ State transition edge cases
+### Casos Límite
+- ✅ Valores límite (límites de calificación: 1-10)
+- ✅ Campos opcionales faltantes manejados con elegancia
+- ✅ Resultados vacíos y escenarios válidos raros
+- ✅ Casos límite de transición de estado
 
-### Exception Cases
-- ✅ Database failures and transaction rollbacks
-- ✅ Validation errors for invalid inputs
-- ✅ Authorization violations
-- ✅ Unexpected states and error conditions
+### Casos de Excepción
+- ✅ Fallos de base de datos y rollbacks de transacción
+- ✅ Errores de validación para entradas inválidas
+- ✅ Violaciones de autorización
+- ✅ Estados inesperados y condiciones de error
 
-## Test Coverage Goals
+## Metas de Cobertura de Pruebas
 
-The test suite achieves **100% coverage** for:
-- **Lines**: Every executable line tested
-- **Statements**: All statements executed
-- **Branches**: All conditional branches covered
-- **Functions**: All methods thoroughly tested
+El conjunto de pruebas logra **100% de cobertura** para:
+- **Líneas**: Cada línea ejecutable probada
+- **Sentencias**: Todas las sentencias ejecutadas
+- **Ramas**: Todas las ramas condicionales cubiertas
+- **Funciones**: Todos los métodos probados exhaustivamente
 
-## Running the Tests
+## Ejecutando las Pruebas
 
-### Prerequisites
-- Node.js and npm installed
-- All dependencies installed: `npm install`
+### Prerrequisitos
+- Node.js y npm instalados
+- Todas las dependencias instaladas: `npm install`
 
-### Required Environment Variables
-Create a `.env.test` file in the project root:
+### Variables de Entorno Requeridas
+Crear un archivo `.env.test` en la raíz del proyecto:
 ```
 JWT_SECRET=test-secret-key
 NODE_ENV=test
 DATABASE_URL=postgresql://test:test@localhost:5432/test_db
 ```
 
-### Execution Commands
+### Comandos de Ejecución
 
 ```bash
-# Run all Consulta tests (service + controller)
+# Ejecutar todas las pruebas de Consulta (servicio + controlador)
 npm test -- src/__tests__/service/consulta/ src/__tests__/controller/consulta/
 
-# Run with coverage report
+# Ejecutar con reporte de cobertura
 npm run test:coverage -- src/__tests__/service/consulta/ src/__tests__/controller/consulta/
 
-# Run specific test file
+# Ejecutar archivo de prueba específico
 npm test -- src/__tests__/service/consulta/consulta.service.test.ts
 
-# Run specific test suite
+# Ejecutar suite de pruebas específico
 npm test -- --testNamePattern="iniciarConsulta.*Normal"
 
-# Run tests in watch mode
+# Ejecutar pruebas en modo watch
 npm run test:watch -- src/__tests__/service/consulta/
 ```
 
-### Coverage Report
-After running tests with coverage, access reports at:
-- **HTML Report**: `coverage/lcov-report/index.html`
-- **Text Report**: `coverage/coverage.txt`
-- **JSON Report**: `coverage/coverage-final.json`
+### Reporte de Cobertura
+Después de ejecutar pruebas con cobertura, acceder a reportes en:
+- **Reporte HTML**: `coverage/lcov-report/index.html`
+- **Reporte de Texto**: `coverage/coverage.txt`
+- **Reporte JSON**: `coverage/coverage-final.json`
 
-## Test Output Example
+## Ejemplo de Salida de Prueba
 
 ```
 PASS src/__tests__/service/consulta/consulta.service.test.ts
@@ -150,17 +150,17 @@ Test Suites: 2 passed, 2 total
 Tests: 58 passed, 58 total
 ```
 
-## Dependencies & Mocking Strategy
+## Dependencias y Estrategia de Simulación
 
-### External Dependencies Mocked
-- **Database Models**: Consulta, Cita, Horario models fully mocked
-- **Sequelize Transactions**: Transaction lifecycle mocked
-- **Express Objects**: Request/Response objects mocked for controller tests
-- **JWT Authentication**: User context mocked in requests
+### Dependencias Externas Simuladas
+- **Modelos de Base de Datos**: Modelos Consulta, Cita, Horario completamente simulados
+- **Transacciones Sequelize**: Ciclo de vida de transacción simulado
+- **Objetos Express**: Objetos Request/Response simulados para pruebas de controlador
+- **Autenticación JWT**: Contexto de usuario simulado en solicitudes
 
-### Mock Implementation
+### Implementación de Simulación
 ```typescript
-// Service layer mocks all database operations
+// Capa de servicio simula todas las operaciones de BD
 jest.mock('../../../model/Consulta', () => ({
   findOne: jest.fn(),
   findByPk: jest.fn(),
@@ -168,7 +168,7 @@ jest.mock('../../../model/Consulta', () => ({
   update: jest.fn(),
 }));
 
-// Controller layer mocks service dependencies
+// Capa de controlador simula dependencias de servicio
 jest.mock('../../../service/ConsultaService', () => ({
   iniciarConsulta: jest.fn(),
   actualizarConsulta: jest.fn(),
@@ -177,14 +177,14 @@ jest.mock('../../../service/ConsultaService', () => ({
 }));
 ```
 
-## AAA Testing Pattern
+## Patrón de Pruebas AAA
 
-All tests follow the Arrange-Act-Assert pattern:
+Todas las pruebas siguen el patrón Arrange-Act-Assert:
 
 ```typescript
 describe('iniciarConsulta - Casos Normales', () => {
   it('should initiate consultation successfully', async () => {
-    // Arrange - Setup mocks and input data
+    // Arrange - Configurar simulaciones y datos de entrada
     const idCita = 1;
     const motivo = 'Consulta de rutina';
     const idMedico = 1;
@@ -198,10 +198,10 @@ describe('iniciarConsulta - Casos Normales', () => {
     mockConsultaFindOne.mockResolvedValue(null);
     mockConsultaCreate.mockResolvedValue(mockConsulta);
 
-    // Act - Execute the function under test
+    // Act - Ejecutar la función bajo prueba
     const result = await ConsultaService.iniciarConsulta(idCita, motivo, idMedico);
 
-    // Assert - Verify expected outcomes
+    // Assert - Verificar resultados esperados
     expect(result).toEqual(mockConsulta);
     expect(mockCitaFindOne).toHaveBeenCalledWith({
       where: { id_cita: idCita },
@@ -211,12 +211,12 @@ describe('iniciarConsulta - Casos Normales', () => {
 });
 ```
 
-## Mock Data Factories
+## Fábricas de Datos de Simulación
 
-Consistent mock data factories ensure test reliability:
+Fábricas de datos de simulación consistentes aseguran confiabilidad de pruebas:
 
 ```typescript
-// Mock consultation factory
+// Fábrica de consulta simulada
 const createMockConsulta = (overrides = {}) => ({
   id_consulta: 1,
   id_cita: 1,
@@ -227,7 +227,7 @@ const createMockConsulta = (overrides = {}) => ({
   ...overrides
 });
 
-// Mock appointment factory
+// Fábrica de cita simulada
 const createMockCita = (overrides = {}) => ({
   id_cita: 1,
   id_paciente: 1,
@@ -238,47 +238,47 @@ const createMockCita = (overrides = {}) => ({
 });
 ```
 
-## Error Scenarios Covered
+## Escenarios de Error Cubiertos
 
-### Service Layer Errors
-- Database connection failures
-- Transaction deadlocks
-- Foreign key constraint violations
-- Unique constraint violations
+### Errores de Capa de Servicio
+- Fallos de conexión a base de datos
+- Deadlocks de transacción
+- Violaciones de restricciones de clave foránea
+- Violaciones de restricciones únicas
 
-### Controller Layer Errors
-- Invalid request parameters
-- Missing authentication
-- Malformed JSON payloads
-- Invalid ID formats
+### Errores de Capa de Controlador
+- Parámetros de solicitud inválidos
+- Autenticación faltante
+- Payloads JSON malformados
+- Formatos de ID inválidos
 
-### Business Logic Errors
-- Authorization failures
-- State transition violations
-- Validation rule breaches
-- Data consistency issues
+### Errores de Lógica de Negocio
+- Fallos de autorización
+- Violaciones de transición de estado
+- Incumplimientos de reglas de validación
+- Problemas de consistencia de datos
 
-## Performance Considerations
+## Consideraciones de Performance
 
-- Tests use mocked dependencies to avoid database calls
-- Parallel test execution enabled
-- Minimal test data to reduce memory usage
-- Fast mock setup and teardown
+- Las pruebas usan dependencias simuladas para evitar llamadas a BD
+- Ejecución paralela de pruebas habilitada
+- Datos de prueba mínimos para reducir uso de memoria
+- Configuración y limpieza de simulaciones rápidas
 
-## Maintenance Guidelines
+## Guías de Mantenimiento
 
-- Keep mock data factories updated with model changes
-- Add new test cases for new business rules
-- Maintain AAA pattern consistency
-- Update coverage requirements as code evolves
-- Document complex test scenarios
+- Mantener fábricas de datos de simulación actualizadas con cambios de modelo
+- Agregar nuevos casos de prueba para nuevas reglas de negocio
+- Mantener consistencia del patrón AAA
+- Actualizar requisitos de cobertura conforme evoluciona el código
+- Documentar escenarios de prueba complejos
 
-## Integration with CI/CD
+## Integración con CI/CD
 
-These tests are designed to run in automated pipelines:
+Estas pruebas están diseñadas para ejecutarse en pipelines automatizados:
 
 ```yaml
-# Example GitHub Actions step
+# Ejemplo de paso de GitHub Actions
 - name: Run Consulta Tests
   run: npm test -- src/__tests__/service/consulta/ src/__tests__/controller/consulta/
   env:
@@ -286,21 +286,21 @@ These tests are designed to run in automated pipelines:
     NODE_ENV: test
 ```
 
-## Troubleshooting
+## Solución de Problemas
 
-### Common Issues
-- **Mock not reset**: Ensure `jest.clearAllMocks()` in `afterEach`
-- **Environment variables**: Check `.env.test` file exists
-- **Dependencies**: Run `npm install` after pulling changes
-- **Coverage**: Use `npm run test:coverage` for detailed reports
+### Problemas Comunes
+- **Simulación no reseteada**: Asegurar `jest.clearAllMocks()` en `afterEach`
+- **Variables de entorno**: Verificar que existe archivo `.env.test`
+- **Dependencias**: Ejecutar `npm install` después de hacer pull de cambios
+- **Cobertura**: Usar `npm run test:coverage` para reportes detallados
 
-### Debug Mode
+### Modo Debug
 ```bash
-# Run with verbose output
+# Ejecutar con salida verbose
 npm test -- --verbose src/__tests__/service/consulta/
 
-# Run single failing test
+# Ejecutar prueba fallida individual
 npm test -- --testNamePattern="exact test name"
 ```
 
-This comprehensive test suite ensures the Consulta module is thoroughly tested, maintainable, and ready for production deployment.
+Este conjunto de pruebas completo asegura que el módulo Consulta esté completamente probado, mantenible y listo para despliegue en producción.

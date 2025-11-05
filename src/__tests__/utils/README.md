@@ -1,65 +1,65 @@
-# Utils Tests
+# Pruebas de Utilidades
 
-This directory contains unit tests for utility functions used throughout the application.
+Este directorio contiene pruebas unitarias para funciones de utilidad usadas en toda la aplicación.
 
-## Test Coverage
+## Cobertura de Pruebas
 
-The utils tests cover the following areas:
+Las pruebas de utilidades cubren las siguientes áreas:
 
-### Mapper Utils (`mapper.test.ts`)
-- **Normal Cases**: Successful mapping between Usuario and UsuarioDTO
-- **Limit Cases**: Edge cases with empty strings, special characters, large values
-- **Exception Cases**: Null/undefined values, invalid data types, missing properties
+### Utilidades de Mapeo (`mapper.test.ts`)
+- **Casos Normales**: Mapeo exitoso entre Usuario y UsuarioDTO
+- **Casos Límite**: Casos extremos con cadenas vacías, caracteres especiales, valores grandes
+- **Casos de Excepción**: Valores null/undefined, tipos de datos inválidos, propiedades faltantes
 
-## Test Structure
+## Estructura de Pruebas
 
-Each test file follows a consistent structure:
+Cada archivo de prueba sigue una estructura consistente:
 
-1. **Setup**: Mock dependencies and configure test environment
-2. **Normal Cases**: Test expected behavior under normal conditions
-3. **Limit Cases**: Test edge cases and boundary conditions
-4. **Exception Cases**: Test error handling and unexpected scenarios
+1. **Configuración**: Simular dependencias y configurar entorno de prueba
+2. **Casos Normales**: Probar comportamiento esperado bajo condiciones normales
+3. **Casos Límite**: Probar casos extremos y condiciones de límite
+4. **Casos de Excepción**: Probar manejo de errores y escenarios inesperados
 
-## Running Tests
+## Ejecutando Pruebas
 
 ```bash
-# Run all utils tests
+# Ejecutar todas las pruebas de utilidades
 npm test -- --testPathPattern=utils
 
-# Run specific utils test
+# Ejecutar prueba específica de utilidades
 npm test -- mapper.test.ts
 
-# Run with coverage
+# Ejecutar con cobertura
 npm test -- --testPathPattern=utils --coverage
 ```
 
-## Coverage Goals
+## Metas de Cobertura
 
-- **Statements**: 100%
-- **Branches**: 100%
-- **Functions**: 100%
-- **Lines**: 100%
+- **Sentencias**: 100%
+- **Ramas**: 100%
+- **Funciones**: 100%
+- **Líneas**: 100%
 
-## Mock Strategy
+## Estrategia de Simulación
 
-Tests use Jest mocks to isolate utility function behavior:
-- Model classes are mocked to avoid database dependencies
-- DTO classes are mocked to focus on mapping logic
-- External dependencies are mocked where necessary
+Las pruebas usan simulaciones de Jest para aislar comportamiento de funciones de utilidad:
+- Clases de modelo están simuladas para evitar dependencias de base de datos
+- Clases DTO están simuladas para enfocarse en lógica de mapeo
+- Dependencias externas están simuladas donde sea necesario
 
-## Test Data
+## Datos de Prueba
 
-Tests use comprehensive data sets:
-- Valid input/output pairs for mapping functions
-- Edge case values (empty strings, special characters, large numbers)
-- Invalid data types to test error resilience
-- Null/undefined values to test robustness
+Las pruebas usan conjuntos de datos completos:
+- Pares entrada/salida válidos para funciones de mapeo
+- Valores de casos extremos (cadenas vacías, caracteres especiales, números grandes)
+- Tipos de datos inválidos para probar resiliencia a errores
+- Valores null/undefined para probar robustez
 
-## Utility Functions Tested
+## Funciones de Utilidad Probadas
 
 ### `usuarioToDTO`
-Maps a Usuario model instance to a UsuarioDTO for API responses:
-- Preserves user ID, name, email, and role
-- Handles data type conversions
-- Maintains data integrity
-- Provides consistent output format
+Mapea una instancia de modelo Usuario a UsuarioDTO para respuestas de API:
+- Preserva ID de usuario, nombre, email y rol
+- Maneja conversiones de tipos de datos
+- Mantiene integridad de datos
+- Proporciona formato de salida consistente

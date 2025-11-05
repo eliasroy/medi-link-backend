@@ -1,95 +1,95 @@
-# Middleware Unit Tests
+# Pruebas Unitarias de Middleware
 
-This directory contains comprehensive unit tests for middleware functions in the application. Currently, it includes tests for the authentication middleware (`auth.ts`) with 100% code coverage.
+Este directorio contiene pruebas unitarias completas para las funciones de middleware en la aplicación. Actualmente, incluye pruebas para el middleware de autenticación (`auth.ts`) con 100% de cobertura de código.
 
-## Test Structure
+## Estructura de Pruebas
 
-Each middleware test file follows a consistent structure:
+Cada archivo de prueba de middleware sigue una estructura consistente:
 
-### Normal Cases
-- Tests successful middleware execution with valid inputs
-- Verifies correct behavior when conditions are met
-- Validates that `next()` is called appropriately
+### Casos Normales
+- Prueba la ejecución exitosa del middleware con entradas válidas
+- Verifica el comportamiento correcto cuando se cumplen las condiciones
+- Valida que `next()` se llame apropiadamente
 
-### Limit Cases
-- Tests boundary conditions and edge cases
-- Handles missing or invalid parameters
-- Validates input constraints and error responses
+### Casos Límite
+- Prueba condiciones de límite y casos extremos
+- Maneja parámetros faltantes o inválidos
+- Valida restricciones de entrada y respuestas de error
 
-### Exception Cases
-- Tests error handling for unexpected scenarios
-- Covers JWT verification failures
-- Handles malformed tokens and authentication errors
+### Casos de Excepción
+- Prueba el manejo de errores para escenarios inesperados
+- Cubre fallos de verificación JWT
+- Maneja tokens malformados y errores de autenticación
 
-## Coverage Report
+## Reporte de Cobertura
 
-All middleware files achieve 100% statement, function, and line coverage:
+Todos los archivos de middleware logran 100% de cobertura de sentencias, funciones y líneas:
 
 ```
 src/middlewares              |   100 |    90 |   100 |   100 |
 ├── auth.ts                  |   100 |    90 |   100 |   100 |
 ```
 
-## Test Files
+## Archivos de Prueba
 
 ### auth.test.ts
-Tests authentication middleware functions:
-- `verifyToken` - JWT token verification middleware
-- `authorizeRoles` - Role-based authorization middleware
+Prueba las funciones de middleware de autenticación:
+- `verifyToken` - Middleware de verificación de tokens JWT
+- `authorizeRoles` - Middleware de autorización basada en roles
 
-#### verifyToken Tests
-- **Normal Cases**: Valid token verification, different user roles
-- **Limit Cases**: Missing/invalid authorization headers, malformed tokens
-- **Exception Cases**: Expired tokens, invalid signatures, verification errors
+#### Pruebas de verifyToken
+- **Casos Normales**: Verificación de tokens válidos, diferentes roles de usuario
+- **Casos Límite**: Encabezados de autorización faltantes/inválidos, tokens malformados
+- **Casos de Excepción**: Tokens expirados, firmas inválidas, errores de verificación
 
-#### authorizeRoles Tests
-- **Normal Cases**: Single role authorization, multiple roles, different user types
-- **Limit Cases**: Unauthenticated users, missing roles, invalid role formats
-- **Exception Cases**: Empty role arrays, case sensitivity, role matching logic
+#### Pruebas de authorizeRoles
+- **Casos Normales**: Autorización de rol único, múltiples roles, diferentes tipos de usuario
+- **Casos Límite**: Usuarios no autenticados, roles faltantes, formatos de rol inválidos
+- **Casos de Excepción**: Arrays de roles vacíos, sensibilidad a mayúsculas, lógica de coincidencia de roles
 
-## Test Results
+## Resultados de Pruebas
 
-- **Total Test Suites**: 1 passed
-- **Total Tests**: 23 passed
-- **Coverage**: 100% for middleware functions
-- **Execution Time**: ~14 seconds
+- **Suites de Prueba Totales**: 1 aprobada
+- **Pruebas Totales**: 23 aprobadas
+- **Cobertura**: 100% para funciones de middleware
+- **Tiempo de Ejecución**: ~14 segundos
 
-## Dependencies
+## Dependencias
 
-The tests use the following key dependencies:
-- `jest`: For mocking and assertions
-- `jsonwebtoken`: For JWT token mocking
-- `express`: For Request/Response type definitions
+Las pruebas utilizan las siguientes dependencias clave:
+- `jest`: Para simulaciones y aserciones
+- `jsonwebtoken`: Para simulación de tokens JWT
+- `express`: Para definiciones de tipos Request/Response
 
-## Mock Strategy
+## Estrategia de Simulación
 
-Each test file mocks:
-- External dependencies (jsonwebtoken)
-- Request/Response objects for middleware testing
-- Next function for continuation testing
+Cada archivo de prueba simula:
+- Dependencias externas (jsonwebtoken)
+- Objetos Request/Response para pruebas de middleware
+- Función next para pruebas de continuación
 
-This ensures tests focus on middleware logic and error handling rather than external services.
+Esto asegura que las pruebas se centren en la lógica del middleware y el manejo de errores en lugar de servicios externos.
 
-## Running Tests
+## Ejecutando Pruebas
 
-To run all middleware tests:
+Para ejecutar todas las pruebas de middleware:
 
 ```bash
 npx jest --testPathPatterns=middlewares --coverage --coverageDirectory=test-report/middlewares-coverage
 ```
 
-To run tests for a specific middleware:
+Para ejecutar pruebas para un middleware específico:
 
 ```bash
 npx jest src/__tests__/middlewares/auth.test.ts
 ```
 
-## Key Test Scenarios
+## Escenarios de Prueba Clave
 
-### Authentication Flow
-1. **Token Verification**: Validates JWT tokens and extracts user information
-2. **Role Authorization**: Ensures users have appropriate permissions
-3. **Error Handling**: Proper HTTP status codes and error messages
-4. **Security**: Prevents unauthorized access and handles edge cases
+### Flujo de Autenticación
+1. **Verificación de Token**: Valida tokens JWT y extrae información de usuario
+2. **Autorización de Rol**: Asegura que los usuarios tengan permisos apropiados
+3. **Manejo de Errores**: Códigos de estado HTTP apropiados y mensajes de error
+4. **Seguridad**: Previene acceso no autorizado y maneja casos extremos
 
-The middleware tests ensure robust authentication and authorization mechanisms throughout the application.
+Las pruebas de middleware aseguran mecanismos robustos de autenticación y autorización en toda la aplicación.

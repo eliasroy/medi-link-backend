@@ -1,84 +1,84 @@
-# Cita Service Tests
+# Pruebas Unitarias - CitaService
 
-## Overview
+## Descripción General
 
-This directory contains comprehensive unit tests for the `CitaService` class, which handles appointment management operations in the healthcare system.
+Este directorio contiene pruebas unitarias completas para la clase `CitaService`, que maneja las operaciones de gestión de citas en el sistema de salud.
 
-## What the Cita Module Does
+## Qué Hace el Módulo Cita
 
-The Cita module manages the appointment lifecycle within the healthcare platform:
+El módulo Cita gestiona el ciclo de vida de las citas dentro de la plataforma de salud:
 
-- **Creating Appointments**: Allows patients to schedule appointments using existing time slots or creating new ones
-- **Retrieving Appointments**: Provides methods to fetch appointments by patient or doctor
-- **Canceling Appointments**: Enables patients to cancel their appointments and free up time slots
+- **Creación de Citas**: Permite a los pacientes programar citas usando espacios de tiempo existentes o creando nuevos
+- **Recuperación de Citas**: Proporciona métodos para obtener citas por paciente o médico
+- **Cancelación de Citas**: Permite a los pacientes cancelar sus citas y liberar espacios de tiempo
 
-### Key Features
+### Características Clave
 
-1. **Flexible Scheduling**: Patients can choose existing available time slots or request new appointment times
-2. **Conflict Prevention**: Validates that no overlapping appointments exist for the same doctor
-3. **State Management**: Tracks appointment states (PENDIENTE, CONFIRMADA, CANCELADA, ATENDIDA)
-4. **Authorization**: Ensures patients can only manage their own appointments
-5. **Resource Management**: Automatically manages schedule slot availability
+1. **Programación Flexible**: Los pacientes pueden elegir espacios de tiempo disponibles existentes o solicitar nuevas horas de cita
+2. **Prevención de Conflictos**: Valida que no existan citas superpuestas para el mismo médico
+3. **Gestión de Estado**: Rastrea estados de cita (PENDIENTE, CONFIRMADA, CANCELADA, ATENDIDA)
+4. **Autorización**: Asegura que los pacientes solo puedan gestionar sus propias citas
+5. **Gestión de Recursos**: Gestiona automáticamente la disponibilidad de espacios de horario
 
-## Test Structure
+## Estructura de Pruebas
 
-### Normal Cases
-- ✅ Successful appointment creation using existing available schedule
-- ✅ Successful appointment creation with new schedule creation
-- ✅ Successful appointment retrieval for patients and doctors
-- ✅ Successful appointment cancellation with schedule liberation
+### Casos Normales
+- ✅ Creación exitosa de cita usando horario disponible existente
+- ✅ Creación exitosa de cita con creación de nuevo horario
+- ✅ Recuperación exitosa de citas para pacientes y médicos
+- ✅ Cancelación exitosa de cita con liberación de horario
 
-### Edge Cases
-- ✅ Handling schedule conflicts and overlaps
-- ✅ Ignoring cancelled schedules in conflict validation
-- ✅ Managing appointments with different modalities (PRESENCIAL/VIRTUAL)
-- ✅ Boundary validation for time slots and dates
+### Casos Límite
+- ✅ Manejo de conflictos de horario y superposiciones
+- ✅ Ignorar horarios cancelados en validación de conflictos
+- ✅ Gestión de citas con diferentes modalidades (PRESENCIAL/VIRTUAL)
+- ✅ Validación de límites para espacios de tiempo y fechas
 
-### Exception Cases
-- ✅ Database failures and transaction rollbacks
-- ✅ Invalid schedule selections
-- ✅ Authorization violations
-- ✅ Missing related entities
+### Casos de Excepción
+- ✅ Fallos de base de datos y rollbacks de transacción
+- ✅ Selecciones de horario inválidas
+- ✅ Violaciones de autorización
+- ✅ Entidades relacionadas faltantes
 
-## Test Coverage
+## Cobertura de Pruebas
 
-The tests achieve 100% coverage for:
-- **Lines**: All executable lines are tested
-- **Statements**: All statements are executed
-- **Branches**: All conditional branches are covered
-- **Functions**: All methods are tested
+Las pruebas logran 100% de cobertura para:
+- **Líneas**: Todas las líneas ejecutables son probadas
+- **Sentencias**: Todas las sentencias son ejecutadas
+- **Ramas**: Todas las ramas condicionales están cubiertas
+- **Funciones**: Todos los métodos son probados
 
-## Running the Tests
+## Ejecutando las Pruebas
 
-### Prerequisites
-- Node.js and npm installed
-- Dependencies installed: `npm install`
+### Prerrequisitos
+- Node.js y npm instalados
+- Dependencias instaladas: `npm install`
 
-### Environment Variables
-Create a `.env.test` file with:
+### Variables de Entorno
+Crear un archivo `.env.test` con:
 ```
 JWT_SECRET=test-secret-key
 NODE_ENV=test
 ```
 
-### Execute Tests
+### Ejecutar Pruebas
 ```bash
-# Run all CitaService tests
+# Ejecutar todas las pruebas de CitaService
 npm test -- src/__tests__/service/cita/cita.service.test.ts
 
-# Run with coverage
+# Ejecutar con cobertura
 npm run test:coverage -- src/__tests__/service/cita/cita.service.test.ts
 
-# Run specific test suite
+# Ejecutar suite de pruebas específico
 npm test -- --testNamePattern="crearCitaConHorario"
 ```
 
-### Coverage Report
-After running tests with coverage, view the report at:
-- **HTML Report**: `coverage/lcov-report/index.html`
-- **Console Output**: Shows coverage percentages in terminal
+### Reporte de Cobertura
+Después de ejecutar pruebas con cobertura, ver el reporte en:
+- **Reporte HTML**: `coverage/lcov-report/index.html`
+- **Salida de Consola**: Muestra porcentajes de cobertura en terminal
 
-## Test Output Example
+## Ejemplo de Salida de Prueba
 
 ```
 PASS src/__tests__/service/cita/cita.service.test.ts
@@ -100,23 +100,23 @@ cita.service.ts    |     100 |      100 |     100 |     100 |                   
 -------------------|---------|----------|---------|---------|-------------------
 ```
 
-## Dependencies Mocked
+## Dependencias Simuladas
 
-- **Cita Model**: All CRUD operations mocked
-- **Horario Model**: Schedule lookups and updates mocked
-- **Medico Model**: Doctor information mocked
-- **Usuario Model**: User data mocked
-- **Paciente Model**: Patient data mocked
-- **Consulta Model**: Consultation data mocked
-- **Database Transactions**: Sequelize transaction handling mocked
+- **Modelo Cita**: Todas las operaciones CRUD simuladas
+- **Modelo Horario**: Búsquedas y actualizaciones de horario simuladas
+- **Modelo Medico**: Información de médico simulada
+- **Modelo Usuario**: Datos de usuario simulados
+- **Modelo Paciente**: Datos de paciente simulados
+- **Modelo Consulta**: Datos de consulta simulados
+- **Transacciones de Base de Datos**: Manejo de transacciones Sequelize simulado
 
-## AAA Pattern
+## Patrón AAA
 
-All tests follow the Arrange-Act-Assert pattern:
+Todas las pruebas siguen el patrón Arrange-Act-Assert:
 
 ```typescript
 it('should create appointment successfully using existing schedule', async () => {
-  // Arrange - Setup mocks and test data
+  // Arrange - Configurar simulaciones y datos de prueba
   const idPaciente = 1;
   const data = { idHorario: 1, idMedico: 1, titulo: 'Consulta General', ... };
 
@@ -127,10 +127,10 @@ it('should create appointment successfully using existing schedule', async () =>
   mockCitaFindOne.mockResolvedValue(null);
   mockCitaCreate.mockResolvedValue(mockCita);
 
-  // Act - Execute the method
+  // Act - Ejecutar el método
   const result = await CitaService.crearCitaConHorario(idPaciente, data);
 
-  // Assert - Verify expected behavior
+  // Assert - Verificar comportamiento esperado
   expect(result).toEqual(mockCita);
   expect(mockHorario.update).toHaveBeenCalledWith(
     { estado: 'OCUPADO', titulo: 'Consulta General' },
@@ -139,13 +139,13 @@ it('should create appointment successfully using existing schedule', async () =>
 });
 ```
 
-## Mock Factories
+## Fábricas de Simulación
 
-The tests use consistent mock data factories for:
-- Mock appointments with different states
-- Mock schedules with various availability statuses
-- Mock doctors with user information
-- Mock patients with user information
-- Mock transactions with commit/rollback behavior
+Las pruebas utilizan fábricas de datos de simulación consistentes para:
+- Citas simuladas con diferentes estados
+- Horarios simulados con varios estados de disponibilidad
+- Médicos simulados con información de usuario
+- Pacientes simulados con información de usuario
+- Transacciones simuladas con comportamiento commit/rollback
 
-This ensures test reliability and maintainability.
+Esto asegura confiabilidad y mantenibilidad de las pruebas.
