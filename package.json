@@ -22,7 +22,8 @@
     "test:istanbul": "nyc --reporter=html --reporter=text jest",
     "test:auth": "jest --testPathPattern=auth.service",
     "test:report": "npm run test:coverage && start coverage/index.html",
-    "build": "tsc"
+    "build": "tsc",
+    "artillery": "artillery"
   },
   "nyc": {
     "extends": "@istanbuljs/nyc-config-typescript",
@@ -71,6 +72,8 @@
     "jest-html-reporters": "^3.1.7",
     "nyc": "^17.1.0",
     "supertest": "^7.1.4",
-    "ts-jest": "^29.4.5"
+    "ts-jest": "^29.4.5",
+    "artillery": "^2.0.12",
+    "ts-node-dev": "^2.0.0"
   }
 }

@@ -1,0 +1,12 @@
+config:
+  target: "http://localhost:3000"
+  phases:
+    - duration: 60
+      arrivalRate: 2
+scenarios:
+  - flow:
+    - post:
+        url: "/api/auth/login"
+        json:
+          email: "paciente1@test.com"
+          password: "123"
