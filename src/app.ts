@@ -10,6 +10,7 @@ import citaRoutes from "./router/citaRoutes";
 import horarioRoutes from "./router/horarioRoutes";
 import consultaRoutes from "./router/consultaRoutes";
 import especialidadRoutes from "./router/especialidad.routes";
+import setupSwagger from "./docs/swagger";
 
 dotenv.config();
 const app = express();
@@ -23,6 +24,7 @@ app.use("/api/citas", citaRoutes);
 app.use("/api/horarios", horarioRoutes);
 app.use("/api/especialidades", especialidadRoutes);
 app.use("/api/consultas",consultaRoutes);
+setupSwagger(app);
 app.use((req, res, next) => {
   console.log(req.method, req.url, req.body);
   next();

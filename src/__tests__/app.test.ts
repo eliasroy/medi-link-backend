@@ -20,6 +20,7 @@ jest.mock('../router/citaRoutes', () => jest.fn());
 jest.mock('../router/horarioRoutes', () => jest.fn());
 jest.mock('../router/consultaRoutes', () => jest.fn());
 jest.mock('../router/especialidad.routes', () => jest.fn());
+jest.mock('../docs/swagger', () => jest.fn());
 
 describe('App', () => {
   beforeEach(() => {
