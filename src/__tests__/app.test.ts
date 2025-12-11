@@ -1,4 +1,4 @@
-const mockApp = { use: jest.fn(), listen: jest.fn() };
+const mockApp = { use: jest.fn(), listen: jest.fn(), get: jest.fn() };
 
 jest.mock('express', () => {
   const express = jest.fn(() => mockApp);
