@@ -1,25 +1,40 @@
-# Usar Node.js ligero
-FROM node:20-alpine
+# ========================
+# Etapa 1: Build
+# ========================
+FROM node:20-alpine AS build
 
-# Crear directorio de la app
 WORKDIR /app
 
-# Copiar package.json y package-lock.json
+# Copiar dependencias
 COPY package*.json ./
 
-# Instalar dependencias de producción y dev necesarias para compilación
-RUN npm install --only=production apk add --no-cache curl
+# Instalar TODAS las dependencias (incluye dev)
+RUN npm install
 
-# Copiar el resto del código
+# Copiar código fuente
 COPY . .
 
 # Compilar TypeScript
 RUN npm run build
 
-# Exponer puerto de la app
+# ========================
+# Etapa 2: Runtime
+# ========================
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Instalar curl para healthcheck
+RUN apk add --no-cache curl
+
+# Copiar solo lo necesario desde build
+COPY --from=build /app/package*.json ./
+COPY --from=build /app/node_modules ./node_modules
+COPY --from=build /app/dist ./dist
+
 EXPOSE 3000
 
-# Ejecutar la app compilada
 CMD ["node", "dist/app.js"]
 
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 CMD curl -f http://localhost:3000/health || exit 1
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+  CMD curl -f http://localhost:3000/health || exit 1
