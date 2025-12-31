@@ -23,22 +23,13 @@ resource "aws_lb_target_group" "tg" {
   target_type = "ip"
 }
 
-resource "aws_lb_listener" "listener" {
-  load_balancer_arn = aws_lb.alb.arn
-  port              = "80"
-  protocol          = "HTTP"
-
-  default_action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.tg.arn
-  }
-}
+# El listener HTTP ha sido movido a alb-listeners.tf para redirigir a HTTPS
 resource "aws_ecs_task_definition" "task" {
   family                   = "medilink-task"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
-  cpu                      = "256"
-  memory                   = "512"
+  cpu                      = "512"
+  memory                   = "1024"
   execution_role_arn = aws_iam_role.ecs_task_execution_role.arn
   task_role_arn      = aws_iam_role.ecs_task_execution_role.arn
   container_definitions = jsonencode([
@@ -76,6 +67,7 @@ resource "aws_ecs_service" "service" {
   cluster         = aws_ecs_cluster.medilink_cluster.id
   task_definition = aws_ecs_task_definition.task.arn
   launch_type     = "FARGATE"
+  health_check_grace_period_seconds = 120
 
   network_configuration {
     subnets          = module.vpc.public_subnets
@@ -89,5 +81,5 @@ resource "aws_ecs_service" "service" {
     container_port   = 3000
   }
 
-  desired_count = 1
+  desired_count = 2
 }
