@@ -49,14 +49,16 @@ resource "aws_ecs_task_definition" "task" {
           "awslogs-stream-prefix" = "ecs"
         }
       }
-    environment = [
-        { name = "PORT", value = "3000" },
-        { name = "DB_PORT", value = "" },
-        { name = "DB_HOST", value = "" },
-        { name = "DB_USER", value = "" },
-        { name = "DB_NAME", value = "" },
-        { name = "DB_PASSWORD", value = "" },
-        { name = "JWT_SECRET", value = "" }
+      environment = [
+        { name = "PORT", value = "3000" }
+      ]
+      secrets = [
+        { name = "DB_PORT", valueFrom = aws_secretsmanager_secret.db_port.arn },
+        { name = "DB_HOST", valueFrom = aws_secretsmanager_secret.db_host.arn },
+        { name = "DB_USER", valueFrom = aws_secretsmanager_secret.db_user.arn },
+        { name = "DB_NAME", valueFrom = aws_secretsmanager_secret.db_name.arn },
+        { name = "DB_PASSWORD", valueFrom = aws_secretsmanager_secret.db_password.arn },
+        { name = "JWT_SECRET", valueFrom = aws_secretsmanager_secret.jwt_secret.arn }
       ]
     
     }

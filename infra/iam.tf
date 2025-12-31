@@ -46,7 +46,11 @@ resource "aws_iam_policy" "ecs_task_execution_policy" {
         ]
         Resource = [
           aws_secretsmanager_secret.db_password.arn,
-          aws_secretsmanager_secret.jwt_secret.arn
+          aws_secretsmanager_secret.jwt_secret.arn,
+          aws_secretsmanager_secret.db_port.arn,
+          aws_secretsmanager_secret.db_host.arn,
+          aws_secretsmanager_secret.db_user.arn,
+          aws_secretsmanager_secret.db_name.arn
         ]
       }
     ]

@@ -8,7 +8,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Instalar dependencias de producción y dev necesarias para compilación
-RUN npm install
+RUN npm install --only=production apk add --no-cache curl
 
 # Copiar el resto del código
 COPY . .
@@ -21,3 +21,5 @@ EXPOSE 3000
 
 # Ejecutar la app compilada
 CMD ["node", "dist/app.js"]
+
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 CMD curl -f http://localhost:3000/health || exit 1
