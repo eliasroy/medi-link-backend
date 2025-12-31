@@ -21,6 +21,15 @@ resource "aws_lb_target_group" "tg" {
   protocol    = "HTTP"
   vpc_id      = module.vpc.vpc_id
   target_type = "ip"
+  health_check {
+    path                = "/health"
+    protocol            = "HTTP"
+    matcher             = "200"
+    interval            = 30
+    timeout             = 5
+    healthy_threshold   = 2
+    unhealthy_threshold = 3
+  }
 }
 
 # El listener HTTP ha sido movido a alb-listeners.tf para redirigir a HTTPS
@@ -69,7 +78,7 @@ resource "aws_ecs_service" "service" {
   cluster         = aws_ecs_cluster.medilink_cluster.id
   task_definition = aws_ecs_task_definition.task.arn
   launch_type     = "FARGATE"
-  health_check_grace_period_seconds = 120
+  health_check_grace_period_seconds = 60
 
   network_configuration {
     subnets          = module.vpc.public_subnets
@@ -83,5 +92,5 @@ resource "aws_ecs_service" "service" {
     container_port   = 3000
   }
 
-  desired_count = 2
+  desired_count = 1
 }
