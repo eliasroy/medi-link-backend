@@ -24,8 +24,6 @@ resource "aws_acm_certificate_validation" "api_cert_validation" {
     for record in aws_route53_record.cert_validation : record.fqdn
   ]
 
-  timeouts {
-    create = "5m"
-  }
+
 }
 

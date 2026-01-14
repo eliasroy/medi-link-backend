@@ -1,6 +1,7 @@
 # Obtener la zona hospedada existente para medilinkpe.click
 data "aws_route53_zone" "medilink_zone" {
   name = "medilinkpe.click"
+  private_zone = false
 }
 
 # Registro DNS para la validación del certificado ACM
@@ -24,7 +25,7 @@ resource "aws_route53_record" "cert_validation" {
 # Registro DNS A para api.medilinkpe.click apuntando al ALB
 resource "aws_route53_record" "api_subdomain" {
   zone_id = data.aws_route53_zone.medilink_zone.zone_id
-  name    = "api.medilinkpe.click"
+  name    = "api"
   type    = "A"
 
   alias {

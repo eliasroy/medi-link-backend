@@ -74,6 +74,9 @@ resource "aws_ecs_task_definition" "task" {
   ])
 }
 resource "aws_ecs_service" "service" {
+   depends_on = [
+    aws_lb_listener.https_listener
+  ]
   name            = "medilink-service"
   cluster         = aws_ecs_cluster.medilink_cluster.id
   task_definition = aws_ecs_task_definition.task.arn
@@ -92,5 +95,5 @@ resource "aws_ecs_service" "service" {
     container_port   = 3000
   }
 
-  desired_count = 1
+  desired_count = 2
 }
