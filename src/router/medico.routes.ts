@@ -36,6 +36,6 @@ const router = Router();
  *       403:
  *         description: Prohibido - Solo los pacientes pueden acceder a este endpoint
  */
-router.get("/medicos", verifyToken, authorizeRoles("PACIENTE"),getMedicos);
+router.get("/medicos", verifyToken, authorizeRoles("PACIENTE","MEDICO"),getMedicos);
 
 export default router;

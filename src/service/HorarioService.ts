@@ -3,6 +3,7 @@ import { Transaction, Op } from "sequelize";
 import {sequelize} from "../config/database";
 import { Medico } from "../model/medico.model";
 import Especialidad from "../model/especialidad.model";
+import { Usuario } from "../model/usuario.model";
 
 class HorarioService {
   /**
@@ -162,8 +163,13 @@ class HorarioService {
       {
         model: Medico,
         as: 'medico',
-        attributes: ['id_medico', 'nombre', 'apellido_paterno', 'apellido_materno'],
+        attributes: ['id_medico'],
         include: [
+          {
+            model: Usuario,
+            as: 'usuario',
+            attributes: ['nombre', 'paterno', 'materno']
+          },
           {
             model: Especialidad,
             as: 'especialidad',
@@ -203,8 +209,13 @@ class HorarioService {
       {
         model: Medico,
         as: 'medico',
-        attributes: ['id_medico', 'nombre', 'apellido_paterno', 'apellido_materno'],
+        attributes: ['id_medico'],
         include: [
+          {
+            model: Usuario,
+            as: 'usuario',
+            attributes: ['nombre', 'paterno', 'materno']
+          },
           {
             model: Especialidad,
             as: 'especialidad',
