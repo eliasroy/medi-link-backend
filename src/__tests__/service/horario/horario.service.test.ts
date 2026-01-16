@@ -17,9 +17,16 @@ jest.mock('../../../model/especialidad.model', () => ({
   },
 }));
 
+jest.mock('../../../model/usuario.model', () => ({
+  Usuario: {
+    // Mock any methods if needed
+  },
+}));
+
 jest.mock('../../../config/database', () => ({
   sequelize: {
     transaction: jest.fn(),
+    define: jest.fn(),
   },
 }));
 
@@ -117,8 +124,15 @@ describe('HorarioService - Tests Completos', () => {
           estado: 'DISPONIBLE',
           medico: {
             id_medico: 1,
-            nombre: 'Dr. Juan',
-            especialidad: { nombre: 'Cardiología' }
+            usuario: {
+              nombre: 'Dr. Juan',
+              paterno: 'Perez',
+              materno: 'Gomez'
+            },
+            especialidad: {
+              id_especialidad: 1,
+              nombre: 'Cardiología'
+            }
           }
         }
       ];
@@ -149,8 +163,15 @@ describe('HorarioService - Tests Completos', () => {
           estado: 'DISPONIBLE',
           medico: {
             id_medico: 1,
-            nombre: 'Dr. Juan',
-            especialidad: { nombre: 'Cardiología' }
+            usuario: {
+              nombre: 'Dr. Juan',
+              paterno: 'Perez',
+              materno: 'Gomez'
+            },
+            especialidad: {
+              id_especialidad: 1,
+              nombre: 'Cardiología'
+            }
           }
         }
       ];
@@ -298,8 +319,15 @@ describe('HorarioService - Tests Completos', () => {
           estado: 'DISPONIBLE',
           medico: {
             id_medico: 1,
-            nombre: 'Dr. Juan',
-            especialidad: { nombre: 'Cardiología' }
+            usuario: {
+              nombre: 'Dr. Juan',
+              paterno: 'Perez',
+              materno: 'Gomez'
+            },
+            especialidad: {
+              id_especialidad: 1,
+              nombre: 'Cardiología'
+            }
           }
         }
       ];
@@ -328,8 +356,15 @@ describe('HorarioService - Tests Completos', () => {
           estado: 'DISPONIBLE',
           medico: {
             id_medico: 1,
-            nombre: 'Dr. Juan',
-            especialidad: { nombre: 'Cardiología' }
+            usuario: {
+              nombre: 'Dr. Juan',
+              paterno: 'Perez',
+              materno: 'Gomez'
+            },
+            especialidad: {
+              id_especialidad: 1,
+              nombre: 'Cardiología'
+            }
           }
         }
       ];
@@ -358,261 +393,6 @@ describe('HorarioService - Tests Completos', () => {
 
       // Assert - Verificar resultados
       expect(result).toEqual([]);
-      expect(mockHorarioFindAll).toHaveBeenCalled();
-    });
-
-    it('debería manejar rango de fechas con un solo día', async () => {
-      // Arrange - Datos de prueba
-      const fechaInicio = '2024-12-01';
-      const fechaFin = '2024-12-01';
-      const filtros = {};
-      const mockHorarios = [
-        {
-          id_horario: 1,
-          fecha: '2024-12-01',
-          hora_inicio: '09:00:00',
-          hora_fin: '10:00:00',
-          modalidad: 'PRESENCIAL',
-          estado: 'DISPONIBLE',
-          medico: {
-            id_medico: 1,
-            nombre: 'Dr. Juan',
-            especialidad: { nombre: 'Cardiología' }
-          }
-        }
-      ];
-
-      // Mock de findAll
-      mockHorarioFindAll.mockResolvedValue(mockHorarios);
-
-      // Act - Ejecutar la función
-      const result = await HorarioService.obtenerHorariosDisponiblesPorRango(fechaInicio, fechaFin, filtros);
-
-      // Assert - Verificar resultados
-      expect(result).toEqual(mockHorarios);
-      expect(mockHorarioFindAll).toHaveBeenCalled();
-    });
-
-    it('debería filtrar horarios por rango con idMedico', async () => {
-      // Arrange - Datos de prueba
-      const fechaInicio = '2024-12-01';
-      const fechaFin = '2024-12-07';
-      const filtros = { idMedico: 1 };
-      const mockHorarios = [
-        {
-          id_horario: 1,
-          id_medico: 1,
-          fecha: '2024-12-01',
-          hora_inicio: '09:00:00',
-          hora_fin: '10:00:00',
-          modalidad: 'PRESENCIAL',
-          estado: 'DISPONIBLE',
-          medico: {
-            id_medico: 1,
-            nombre: 'Dr. Juan',
-            especialidad: { nombre: 'Cardiología' }
-          }
-        }
-      ];
-
-      // Mock de findAll
-      mockHorarioFindAll.mockResolvedValue(mockHorarios);
-
-      // Act - Ejecutar la función
-      const result = await HorarioService.obtenerHorariosDisponiblesPorRango(fechaInicio, fechaFin, filtros);
-
-      // Assert - Verificar resultados
-      expect(result).toEqual(mockHorarios);
-      expect(mockHorarioFindAll).toHaveBeenCalled();
-    });
-
-    it('debería filtrar horarios por rango con modalidad', async () => {
-      // Arrange - Datos de prueba
-      const fechaInicio = '2024-12-01';
-      const fechaFin = '2024-12-07';
-      const filtros = { modalidad: 'VIRTUAL' as const };
-      const mockHorarios = [
-        {
-          id_horario: 1,
-          fecha: '2024-12-01',
-          hora_inicio: '09:00:00',
-          hora_fin: '10:00:00',
-          modalidad: 'VIRTUAL',
-          estado: 'DISPONIBLE',
-          medico: {
-            id_medico: 1,
-            nombre: 'Dr. Juan',
-            especialidad: { nombre: 'Cardiología' }
-          }
-        }
-      ];
-
-      // Mock de findAll
-      mockHorarioFindAll.mockResolvedValue(mockHorarios);
-
-      // Act - Ejecutar la función
-      const result = await HorarioService.obtenerHorariosDisponiblesPorRango(fechaInicio, fechaFin, filtros);
-
-      // Assert - Verificar resultados
-      expect(result).toEqual(mockHorarios);
-      expect(mockHorarioFindAll).toHaveBeenCalled();
-    });
-
-    it('debería filtrar horarios por rango con estado', async () => {
-      // Arrange - Datos de prueba
-      const fechaInicio = '2024-12-01';
-      const fechaFin = '2024-12-07';
-      const filtros = { estado: 'DISPONIBLE' };
-      const mockHorarios = [
-        {
-          id_horario: 1,
-          fecha: '2024-12-01',
-          hora_inicio: '09:00:00',
-          hora_fin: '10:00:00',
-          modalidad: 'PRESENCIAL',
-          estado: 'DISPONIBLE',
-          medico: {
-            id_medico: 1,
-            nombre: 'Dr. Juan',
-            especialidad: { nombre: 'Cardiología' }
-          }
-        }
-      ];
-
-      // Mock de findAll
-      mockHorarioFindAll.mockResolvedValue(mockHorarios);
-
-      // Act - Ejecutar la función
-      const result = await HorarioService.obtenerHorariosDisponiblesPorRango(fechaInicio, fechaFin, filtros);
-
-      // Assert - Verificar resultados
-      expect(result).toEqual(mockHorarios);
-      expect(mockHorarioFindAll).toHaveBeenCalled();
-    });
-
-    it('debería filtrar horarios de semana por estado', async () => {
-      // Arrange - Datos de prueba
-      const filtros = { estado: 'DISPONIBLE' };
-      const mockHorarios = [
-        {
-          id_horario: 1,
-          fecha: '2024-12-01',
-          hora_inicio: '09:00:00',
-          hora_fin: '10:00:00',
-          modalidad: 'PRESENCIAL',
-          estado: 'DISPONIBLE',
-          medico: {
-            id_medico: 1,
-            nombre: 'Dr. Juan',
-            especialidad: { nombre: 'Cardiología' }
-          }
-        }
-      ];
-
-      // Mock de findAll
-      mockHorarioFindAll.mockResolvedValue(mockHorarios);
-
-      // Act - Ejecutar la función
-      const result = await HorarioService.obtenerHorariosDisponiblesSemana(filtros);
-
-      // Assert - Verificar resultados
-      expect(result).toEqual(mockHorarios);
-      expect(mockHorarioFindAll).toHaveBeenCalled();
-    });
-  });
-
-  describe('Casos Límite Adicionales', () => {
-    it('debería manejar fechas de fin de mes correctamente', async () => {
-      // Arrange - Datos de prueba para fecha de fin de mes
-      const fechaInicio = '2024-01-31';
-      const fechaFin = '2024-02-02';
-      const filtros = {};
-      const mockHorarios = [
-        {
-          id_horario: 1,
-          fecha: '2024-01-31',
-          hora_inicio: '09:00:00',
-          hora_fin: '10:00:00',
-          modalidad: 'PRESENCIAL',
-          estado: 'DISPONIBLE',
-          medico: {
-            id_medico: 1,
-            nombre: 'Dr. Juan',
-            especialidad: { nombre: 'Cardiología' }
-          }
-        }
-      ];
-
-      // Mock de findAll
-      mockHorarioFindAll.mockResolvedValue(mockHorarios);
-
-      // Act - Ejecutar la función
-      const result = await HorarioService.obtenerHorariosDisponiblesPorRango(fechaInicio, fechaFin, filtros);
-
-      // Assert - Verificar resultados
-      expect(result).toEqual(mockHorarios);
-      expect(mockHorarioFindAll).toHaveBeenCalled();
-    });
-
-    it('debería manejar año bisiesto correctamente', async () => {
-      // Arrange - Datos de prueba para año bisiesto
-      const fechaInicio = '2024-02-28';
-      const fechaFin = '2024-03-01';
-      const filtros = {};
-      const mockHorarios = [
-        {
-          id_horario: 1,
-          fecha: '2024-02-29',
-          hora_inicio: '09:00:00',
-          hora_fin: '10:00:00',
-          modalidad: 'PRESENCIAL',
-          estado: 'DISPONIBLE',
-          medico: {
-            id_medico: 1,
-            nombre: 'Dr. Juan',
-            especialidad: { nombre: 'Cardiología' }
-          }
-        }
-      ];
-
-      // Mock de findAll
-      mockHorarioFindAll.mockResolvedValue(mockHorarios);
-
-      // Act - Ejecutar la función
-      const result = await HorarioService.obtenerHorariosDisponiblesPorRango(fechaInicio, fechaFin, filtros);
-
-      // Assert - Verificar resultados
-      expect(result).toEqual(mockHorarios);
-      expect(mockHorarioFindAll).toHaveBeenCalled();
-    });
-
-    it('debería manejar cambio de horario de verano (DST)', async () => {
-      // Arrange - Datos de prueba para cambio de DST
-      const filtros = {};
-      const mockHorarios = [
-        {
-          id_horario: 1,
-          fecha: '2024-03-10',
-          hora_inicio: '02:30:00',
-          hora_fin: '03:30:00',
-          modalidad: 'PRESENCIAL',
-          estado: 'DISPONIBLE',
-          medico: {
-            id_medico: 1,
-            nombre: 'Dr. Juan',
-            especialidad: { nombre: 'Cardiología' }
-          }
-        }
-      ];
-
-      // Mock de findAll
-      mockHorarioFindAll.mockResolvedValue(mockHorarios);
-
-      // Act - Ejecutar la función
-      const result = await HorarioService.obtenerHorariosDisponiblesSemana(filtros);
-
-      // Assert - Verificar resultados
-      expect(result).toEqual(mockHorarios);
       expect(mockHorarioFindAll).toHaveBeenCalled();
     });
 
@@ -659,6 +439,317 @@ describe('HorarioService - Tests Completos', () => {
       // Assert - Verificar resultados
       expect(result).toEqual(mockHorarioCreado);
       expect(mockHorarioCreate).toHaveBeenCalled();
+    });
+
+    it('debería manejar rango de fechas con un solo día', async () => {
+      // Arrange - Datos de prueba
+      const fechaInicio = '2024-12-01';
+      const fechaFin = '2024-12-01';
+      const filtros = {};
+      const mockHorarios = [
+        {
+          id_horario: 1,
+          fecha: '2024-12-01',
+          hora_inicio: '09:00:00',
+          hora_fin: '10:00:00',
+          modalidad: 'PRESENCIAL',
+          estado: 'DISPONIBLE',
+          medico: {
+            id_medico: 1,
+            usuario: {
+              nombre: 'Dr. Juan',
+              paterno: 'Perez',
+              materno: 'Gomez'
+            },
+            especialidad: {
+              id_especialidad: 1,
+              nombre: 'Cardiología'
+            }
+          }
+        }
+      ];
+
+      // Mock de findAll
+      mockHorarioFindAll.mockResolvedValue(mockHorarios);
+
+      // Act - Ejecutar la función
+      const result = await HorarioService.obtenerHorariosDisponiblesPorRango(fechaInicio, fechaFin, filtros);
+
+      // Assert - Verificar resultados
+      expect(result).toEqual(mockHorarios);
+      expect(mockHorarioFindAll).toHaveBeenCalled();
+    });
+
+    it('debería filtrar horarios por rango con idMedico', async () => {
+      // Arrange - Datos de prueba
+      const fechaInicio = '2024-12-01';
+      const fechaFin = '2024-12-07';
+      const filtros = { idMedico: 1 };
+      const mockHorarios = [
+        {
+          id_horario: 1,
+          id_medico: 1,
+          fecha: '2024-12-01',
+          hora_inicio: '09:00:00',
+          hora_fin: '10:00:00',
+          modalidad: 'PRESENCIAL',
+          estado: 'DISPONIBLE',
+          medico: {
+            id_medico: 1,
+            usuario: {
+              nombre: 'Dr. Juan',
+              paterno: 'Perez',
+              materno: 'Gomez'
+            },
+            especialidad: {
+              id_especialidad: 1,
+              nombre: 'Cardiología'
+            }
+          }
+        }
+      ];
+
+      // Mock de findAll
+      mockHorarioFindAll.mockResolvedValue(mockHorarios);
+
+      // Act - Ejecutar la función
+      const result = await HorarioService.obtenerHorariosDisponiblesPorRango(fechaInicio, fechaFin, filtros);
+
+      // Assert - Verificar resultados
+      expect(result).toEqual(mockHorarios);
+      expect(mockHorarioFindAll).toHaveBeenCalled();
+    });
+
+    it('debería filtrar horarios por rango con modalidad', async () => {
+      // Arrange - Datos de prueba
+      const fechaInicio = '2024-12-01';
+      const fechaFin = '2024-12-07';
+      const filtros = { modalidad: 'VIRTUAL' as const };
+      const mockHorarios = [
+        {
+          id_horario: 1,
+          fecha: '2024-12-01',
+          hora_inicio: '09:00:00',
+          hora_fin: '10:00:00',
+          modalidad: 'VIRTUAL',
+          estado: 'DISPONIBLE',
+          medico: {
+            id_medico: 1,
+            usuario: {
+              nombre: 'Dr. Juan',
+              paterno: 'Perez',
+              materno: 'Gomez'
+            },
+            especialidad: {
+              id_especialidad: 1,
+              nombre: 'Cardiología'
+            }
+          }
+        }
+      ];
+
+      // Mock de findAll
+      mockHorarioFindAll.mockResolvedValue(mockHorarios);
+
+      // Act - Ejecutar la función
+      const result = await HorarioService.obtenerHorariosDisponiblesPorRango(fechaInicio, fechaFin, filtros);
+
+      // Assert - Verificar resultados
+      expect(result).toEqual(mockHorarios);
+      expect(mockHorarioFindAll).toHaveBeenCalled();
+    });
+
+    it('debería filtrar horarios por rango con estado', async () => {
+      // Arrange - Datos de prueba
+      const fechaInicio = '2024-12-01';
+      const fechaFin = '2024-12-07';
+      const filtros = { estado: 'DISPONIBLE' };
+      const mockHorarios = [
+        {
+          id_horario: 1,
+          fecha: '2024-12-01',
+          hora_inicio: '09:00:00',
+          hora_fin: '10:00:00',
+          modalidad: 'PRESENCIAL',
+          estado: 'DISPONIBLE',
+          medico: {
+            id_medico: 1,
+            usuario: {
+              nombre: 'Dr. Juan',
+              paterno: 'Perez',
+              materno: 'Gomez'
+            },
+            especialidad: {
+              id_especialidad: 1,
+              nombre: 'Cardiología'
+            }
+          }
+        }
+      ];
+
+      // Mock de findAll
+      mockHorarioFindAll.mockResolvedValue(mockHorarios);
+
+      // Act - Ejecutar la función
+      const result = await HorarioService.obtenerHorariosDisponiblesPorRango(fechaInicio, fechaFin, filtros);
+
+      // Assert - Verificar resultados
+      expect(result).toEqual(mockHorarios);
+      expect(mockHorarioFindAll).toHaveBeenCalled();
+    });
+
+    it('debería filtrar horarios de semana por estado', async () => {
+      // Arrange - Datos de prueba
+      const filtros = { estado: 'DISPONIBLE' };
+      const mockHorarios = [
+        {
+          id_horario: 1,
+          fecha: '2024-12-01',
+          hora_inicio: '09:00:00',
+          hora_fin: '10:00:00',
+          modalidad: 'PRESENCIAL',
+          estado: 'DISPONIBLE',
+          medico: {
+            id_medico: 1,
+            usuario: {
+              nombre: 'Dr. Juan',
+              paterno: 'Perez',
+              materno: 'Gomez'
+            },
+            especialidad: {
+              id_especialidad: 1,
+              nombre: 'Cardiología'
+            }
+          }
+        }
+      ];
+
+      // Mock de findAll
+      mockHorarioFindAll.mockResolvedValue(mockHorarios);
+
+      // Act - Ejecutar la función
+      const result = await HorarioService.obtenerHorariosDisponiblesSemana(filtros);
+
+      // Assert - Verificar resultados
+      expect(result).toEqual(mockHorarios);
+      expect(mockHorarioFindAll).toHaveBeenCalled();
+    });
+  });
+
+  describe('Casos Límite Adicionales', () => {
+    it('debería manejar fechas de fin de mes correctamente', async () => {
+      // Arrange - Datos de prueba para fecha de fin de mes
+      const fechaInicio = '2024-01-31';
+      const fechaFin = '2024-02-02';
+      const filtros = {};
+      const mockHorarios = [
+        {
+          id_horario: 1,
+          fecha: '2024-01-31',
+          hora_inicio: '09:00:00',
+          hora_fin: '10:00:00',
+          modalidad: 'PRESENCIAL',
+          estado: 'DISPONIBLE',
+          medico: {
+            id_medico: 1,
+            usuario: {
+              nombre: 'Dr. Juan',
+              paterno: 'Perez',
+              materno: 'Gomez'
+            },
+            especialidad: {
+              id_especialidad: 1,
+              nombre: 'Cardiología'
+            }
+          }
+        }
+      ];
+
+      // Mock de findAll
+      mockHorarioFindAll.mockResolvedValue(mockHorarios);
+
+      // Act - Ejecutar la función
+      const result = await HorarioService.obtenerHorariosDisponiblesPorRango(fechaInicio, fechaFin, filtros);
+
+      // Assert - Verificar resultados
+      expect(result).toEqual(mockHorarios);
+      expect(mockHorarioFindAll).toHaveBeenCalled();
+    });
+
+    it('debería manejar año bisiesto correctamente', async () => {
+      // Arrange - Datos de prueba para año bisiesto
+      const fechaInicio = '2024-02-28';
+      const fechaFin = '2024-03-01';
+      const filtros = {};
+      const mockHorarios = [
+        {
+          id_horario: 1,
+          fecha: '2024-02-29',
+          hora_inicio: '09:00:00',
+          hora_fin: '10:00:00',
+          modalidad: 'PRESENCIAL',
+          estado: 'DISPONIBLE',
+          medico: {
+            id_medico: 1,
+            usuario: {
+              nombre: 'Dr. Juan',
+              paterno: 'Perez',
+              materno: 'Gomez'
+            },
+            especialidad: {
+              id_especialidad: 1,
+              nombre: 'Cardiología'
+            }
+          }
+        }
+      ];
+
+      // Mock de findAll
+      mockHorarioFindAll.mockResolvedValue(mockHorarios);
+
+      // Act - Ejecutar la función
+      const result = await HorarioService.obtenerHorariosDisponiblesPorRango(fechaInicio, fechaFin, filtros);
+
+      // Assert - Verificar resultados
+      expect(result).toEqual(mockHorarios);
+      expect(mockHorarioFindAll).toHaveBeenCalled();
+    });
+
+    it('debería manejar cambio de horario de verano (DST)', async () => {
+      // Arrange - Datos de prueba para cambio de DST
+      const filtros = {};
+      const mockHorarios = [
+        {
+          id_horario: 1,
+          fecha: '2024-03-10',
+          hora_inicio: '02:30:00',
+          hora_fin: '03:30:00',
+          modalidad: 'PRESENCIAL',
+          estado: 'DISPONIBLE',
+          medico: {
+            id_medico: 1,
+            usuario: {
+              nombre: 'Dr. Juan',
+              paterno: 'Perez',
+              materno: 'Gomez'
+            },
+            especialidad: {
+              id_especialidad: 1,
+              nombre: 'Cardiología'
+            }
+          }
+        }
+      ];
+
+      // Mock de findAll
+      mockHorarioFindAll.mockResolvedValue(mockHorarios);
+
+      // Act - Ejecutar la función
+      const result = await HorarioService.obtenerHorariosDisponiblesSemana(filtros);
+
+      // Assert - Verificar resultados
+      expect(result).toEqual(mockHorarios);
+      expect(mockHorarioFindAll).toHaveBeenCalled();
     });
 
     it('debería manejar múltiples filtros combinados con valores extremos', async () => {
